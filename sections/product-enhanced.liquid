@@ -481,7 +481,7 @@
 
 <!-- Image Zoom Modal -->
 {%- if section.settings.enable_image_zoom -%}
-  <div class="zoom-modal" data-zoom-modal hidden>
+  <div class="zoom-modal" data-zoom-modal hidden style="display: none !important;">
     <button type="button" class="zoom-modal__close" data-zoom-close aria-label="Close zoom">
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
         <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
@@ -491,6 +491,45 @@
       <img src="" alt="" class="zoom-modal__image" data-zoom-image>
     </div>
   </div>
+  <script>
+    // Immediately hide modal on page load and add emergency close
+    (function() {
+      const modal = document.querySelector('[data-zoom-modal]');
+      if (modal) {
+        modal.hidden = true;
+        modal.style.display = 'none';
+        document.body.style.overflow = '';
+        
+        // Emergency close handler
+        const closeBtn = modal.querySelector('[data-zoom-close]');
+        if (closeBtn) {
+          closeBtn.addEventListener('click', function() {
+            modal.hidden = true;
+            modal.style.display = 'none';
+            document.body.style.overflow = '';
+          });
+        }
+        
+        // Close on background click
+        modal.addEventListener('click', function(e) {
+          if (e.target === modal) {
+            modal.hidden = true;
+            modal.style.display = 'none';
+            document.body.style.overflow = '';
+          }
+        });
+        
+        // Close on Escape key
+        document.addEventListener('keydown', function(e) {
+          if (e.key === 'Escape' && !modal.hidden) {
+            modal.hidden = true;
+            modal.style.display = 'none';
+            document.body.style.overflow = '';
+          }
+        });
+      }
+    })();
+  </script>
 {%- endif -%}
 
 <script>
@@ -1711,7 +1750,7 @@
       "type": "checkbox",
       "id": "enable_image_zoom",
       "label": "Enable image zoom",
-      "default": true
+      "default": false
     },
     {
       "type": "checkbox",
