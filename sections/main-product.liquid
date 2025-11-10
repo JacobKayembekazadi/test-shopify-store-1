@@ -7,60 +7,109 @@
   endif
 -%}
 
-<div class="product section-spacing" data-section-id="{{ section.id }}" data-section-type="product" data-product-handle="{{ product.handle }}">
+<div class="product section-spacing" data-section-id="{{ section.id }}" data-section-type="product" data-product-handle="{{ product.handle }}" data-product-id="{{ product.id }}">
   <div class="container">
-    <div class="product__wrapper">
-      <div class="product__media-wrapper">
+    <div class="product__wrapper {% if section.settings.media_position == 'right' %}product__wrapper--reverse{% endif %}">
+      <!-- Product Media Gallery -->
+      <div class="product__media-wrapper {% if section.settings.enable_sticky_info %}product__media-wrapper--sticky{% endif %}">
         {%- if product.media.size > 0 -%}
-          <div class="product__media">
-            {%- for media in product.media -%}
-              <div class="product__media-item {% if forloop.first %}product__media-item--active{% endif %}" data-media-id="{{ media.id }}">
-                {%- case media.media_type -%}
-                  {%- when 'image' -%}
-                    <img
-                      src="{{ media | image_url: width: 1200 }}"
-                      alt="{{ media.alt | escape }}"
-                      class="product__media-image"
-                      width="1200"
-                      height="1200"
-                      loading="lazy"
-                    >
-                  {%- when 'video' -%}
-                    {{ media | video_tag: image_size: "1200x", loop: section.settings.enable_video_looping, controls: true, preload: "none" }}
-                  {%- when 'external_video' -%}
-                    {%- assign video_class = 'js-' | append: media.host -%}
-                    {%- if media.host == 'youtube' -%}
-                      {{ media | external_video_tag: class: video_class, loading: "lazy", loop: section.settings.enable_video_looping, playlist: media.external_id }}
-                    {%- else -%}
-                      {{ media | external_video_tag: class: video_class, loading: "lazy", loop: section.settings.enable_video_looping }}
-                    {%- endif -%}
-                  {%- when 'model' -%}
-                    {{ media | model_viewer_tag: image_size: "1200x", toggleable: true, data-model-id: media.id }}
-                {%- endcase -%}
-              </div>
-            {%- endfor -%}
-          </div>
-
-          {%- if product.media.size > 1 -%}
-            <div class="product__media-thumbnails">
+          <div class="product__media-gallery" data-media-gallery>
+            <!-- Main Media Display -->
+            <div class="product__media-main">
               {%- for media in product.media -%}
-                <button
-                  type="button"
-                  class="product__media-thumbnail {% if forloop.first %}product__media-thumbnail--active{% endif %}"
-                  data-media-id="{{ media.id }}"
-                  aria-label="View media {{ forloop.index }}"
-                >
-                  <img
-                    src="{{ media | image_url: width: 200 }}"
-                    alt="{{ media.alt | escape }}"
-                    width="200"
-                    height="200"
-                    loading="lazy"
-                  >
-                </button>
+                <div class="product__media-item {% if forloop.first %}product__media-item--active{% endif %}" data-media-id="{{ media.id }}" data-media-type="{{ media.media_type }}">
+                  {%- case media.media_type -%}
+                    {%- when 'image' -%}
+                      {%- if section.settings.image_zoom == 'lightbox' -%}
+                        <a href="{{ media | image_url: width: 2048 }}" class="product__media-link" data-lightbox>
+                          <img
+                            src="{{ media | image_url: width: 1200 }}"
+                            srcset="{{ media | image_url: width: 600 }} 600w,
+                                    {{ media | image_url: width: 900 }} 900w,
+                                    {{ media | image_url: width: 1200 }} 1200w,
+                                    {{ media | image_url: width: 1800 }} 1800w"
+                            sizes="(min-width: 990px) 50vw, 100vw"
+                            alt="{{ media.alt | escape }}"
+                            class="product__media-image"
+                            width="{{ media.width }}"
+                            height="{{ media.height }}"
+                            loading="{% if forloop.first %}eager{% else %}lazy{% endif %}"
+                          >
+                        </a>
+                      {%- else -%}
+                        <img
+                          src="{{ media | image_url: width: 1200 }}"
+                          srcset="{{ media | image_url: width: 600 }} 600w,
+                                  {{ media | image_url: width: 900 }} 900w,
+                                  {{ media | image_url: width: 1200 }} 1200w,
+                                  {{ media | image_url: width: 1800 }} 1800w"
+                          sizes="(min-width: 990px) 50vw, 100vw"
+                          alt="{{ media.alt | escape }}"
+                          class="product__media-image"
+                          width="{{ media.width }}"
+                          height="{{ media.height }}"
+                          loading="{% if forloop.first %}eager{% else %}lazy{% endif %}"
+                        >
+                      {%- endif -%}
+                    {%- when 'video' -%}
+                      <div class="product__media-video">
+                        {{ media | video_tag: image_size: "1200x", loop: section.settings.enable_video_looping, controls: true, preload: "none", autoplay: false }}
+                      </div>
+                    {%- when 'external_video' -%}
+                      <div class="product__media-external-video">
+                        {%- assign video_class = 'js-' | append: media.host -%}
+                        {%- if media.host == 'youtube' -%}
+                          {{ media | external_video_tag: class: video_class, loading: "lazy", loop: section.settings.enable_video_looping, playlist: media.external_id }}
+                        {%- elsif media.host == 'vimeo' -%}
+                          {{ media | external_video_tag: class: video_class, loading: "lazy", loop: section.settings.enable_video_looping }}
+                        {%- endif -%}
+                      </div>
+                    {%- when 'model' -%}
+                      <div class="product__media-model">
+                        {{ media | model_viewer_tag: image_size: "1200x", toggleable: true, data-model-id: media.id, reveal: "interaction" }}
+                      </div>
+                  {%- endcase -%}
+                </div>
               {%- endfor -%}
             </div>
-          {%- endif -%}
+
+            <!-- Thumbnails -->
+            {%- if product.media.size > 1 -%}
+              <div class="product__media-thumbnails {% if section.settings.mobile_thumbnails == 'hide' %}product__media-thumbnails--desktop-only{% endif %}" data-media-thumbnails>
+                {%- for media in product.media -%}
+                  <button
+                    type="button"
+                    class="product__media-thumbnail {% if forloop.first %}product__media-thumbnail--active{% endif %}"
+                    data-media-id="{{ media.id }}"
+                    data-media-type="{{ media.media_type }}"
+                    aria-label="View {{ media.alt | default: 'media' }} {{ forloop.index }}"
+                    aria-current="{% if forloop.first %}true{% else %}false{% endif %}"
+                  >
+                    {%- if media.media_type == 'video' or media.media_type == 'external_video' -%}
+                      <div class="product__media-thumbnail-icon">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                          <path d="M6 4l6 4-6 4V4z" fill="currentColor"/>
+                        </svg>
+                      </div>
+                    {%- elsif media.media_type == 'model' -%}
+                      <div class="product__media-thumbnail-icon">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                          <path d="M8 2L2 6v4l6 4 6-4V6L8 2z" fill="currentColor"/>
+                        </svg>
+                      </div>
+                    {%- endif -%}
+                    <img
+                      src="{{ media | image_url: width: 200 }}"
+                      alt="{{ media.alt | escape }}"
+                      width="200"
+                      height="200"
+                      loading="lazy"
+                    >
+                  </button>
+                {%- endfor -%}
+              </div>
+            {%- endif -%}
+          </div>
         {%- else -%}
           <div class="product__media-placeholder">
             {{ 'product-1' | placeholder_svg_tag: 'product__media-placeholder-svg' }}
@@ -68,42 +117,213 @@
         {%- endif -%}
       </div>
 
-      <div class="product__info-wrapper">
+      <!-- Product Info -->
+      <div class="product__info-wrapper {% if section.settings.enable_sticky_info %}product__info-wrapper--sticky{% endif %}">
         <div class="product__info">
+          <!-- Vendor -->
           {%- if section.settings.show_vendor and product.vendor != blank -%}
-            <p class="product__vendor">{{ product.vendor }}</p>
+            <p class="product__vendor">
+              <a href="{{ product.vendor | url_for_vendor }}" class="product__vendor-link">{{ product.vendor }}</a>
+            </p>
           {%- endif -%}
 
-          <h1 class="product__title">{{ product.title | default: 'Product title' }}</h1>
+          <!-- Title -->
+          <h1 class="product__title">{{ product.title }}</h1>
 
-          <div class="product__price-wrapper">
-            <span class="product__price">
+          <!-- Price -->
+          <div class="product__price-wrapper" data-price-wrapper>
+            <span class="product__price" data-price>
               {{ selected_variant.price | money }}
             </span>
             {%- if selected_variant.compare_at_price > selected_variant.price -%}
-              <span class="product__compare-price">
+              <span class="product__compare-price" data-compare-price>
                 {{ selected_variant.compare_at_price | money }}
               </span>
               {%- liquid
                 assign discount_amount = selected_variant.compare_at_price | minus: selected_variant.price
                 assign discount_percentage = discount_amount | times: 100.0 | divided_by: selected_variant.compare_at_price | round
               -%}
-              <span class="product__discount-badge">Save {{ discount_percentage }}%</span>
+              <span class="product__discount-badge" data-discount-badge>
+                Save {{ discount_percentage }}%
+              </span>
             {%- endif -%}
           </div>
 
-          {%- if product.description != blank -%}
-            <div class="product__description">
-              {{ product.description }}
+          <!-- Tax/Shipping Text -->
+          {%- if section.settings.show_tax_shipping_text and section.settings.tax_shipping_text != blank -%}
+            <p class="product__tax-shipping-text">{{ section.settings.tax_shipping_text }}</p>
+          {%- endif -%}
+
+          <!-- Benefits/Bullet Points -->
+          {%- if section.settings.show_benefits -%}
+            <div class="product__benefits">
+              {%- if section.settings.benefit_1 != blank -%}
+                <div class="product__benefit-item">
+                  <svg class="product__benefit-icon" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <path d="M16.667 5L7.5 14.167 3.333 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                  <span>{{ section.settings.benefit_1 }}</span>
+                </div>
+              {%- endif -%}
+              {%- if section.settings.benefit_2 != blank -%}
+                <div class="product__benefit-item">
+                  <svg class="product__benefit-icon" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <path d="M16.667 5L7.5 14.167 3.333 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                  <span>{{ section.settings.benefit_2 }}</span>
+                </div>
+              {%- endif -%}
+              {%- if section.settings.benefit_3 != blank -%}
+                <div class="product__benefit-item">
+                  <svg class="product__benefit-icon" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <path d="M16.667 5L7.5 14.167 3.333 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                  <span>{{ section.settings.benefit_3 }}</span>
+                </div>
+              {%- endif -%}
+              {%- if section.settings.benefit_4 != blank -%}
+                <div class="product__benefit-item">
+                  <svg class="product__benefit-icon" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <path d="M16.667 5L7.5 14.167 3.333 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                  <span>{{ section.settings.benefit_4 }}</span>
+                </div>
+              {%- endif -%}
             </div>
           {%- endif -%}
 
-          {% render 'product-form', product: product, selected_variant: selected_variant %}
+          <!-- Stock Message -->
+          {%- if section.settings.show_stock_message -%}
+            <div class="product__stock-message" data-stock-message style="display: none;">
+              <span class="product__stock-text" data-stock-text></span>
+            </div>
+          {%- endif -%}
+
+          <!-- Product Form -->
+          {% render 'product-form', 
+            product: product, 
+            selected_variant: selected_variant,
+            section: section
+          %}
+
+          <!-- Trust Badges -->
+          {%- if section.settings.show_trust_badges -%}
+            <div class="product__trust-badges">
+              {%- if section.settings.trust_badge_1_text != blank -%}
+                <div class="product__trust-badge">
+                  {%- if section.settings.trust_badge_1_icon != blank -%}
+                    <img src="{{ section.settings.trust_badge_1_icon | image_url: width: 40 }}" alt="{{ section.settings.trust_badge_1_text }}" width="40" height="40">
+                  {%- endif -%}
+                  <span>{{ section.settings.trust_badge_1_text }}</span>
+                </div>
+              {%- endif -%}
+              {%- if section.settings.trust_badge_2_text != blank -%}
+                <div class="product__trust-badge">
+                  {%- if section.settings.trust_badge_2_icon != blank -%}
+                    <img src="{{ section.settings.trust_badge_2_icon | image_url: width: 40 }}" alt="{{ section.settings.trust_badge_2_text }}" width="40" height="40">
+                  {%- endif -%}
+                  <span>{{ section.settings.trust_badge_2_text }}</span>
+                </div>
+              {%- endif -%}
+              {%- if section.settings.trust_badge_3_text != blank -%}
+                <div class="product__trust-badge">
+                  {%- if section.settings.trust_badge_3_icon != blank -%}
+                    <img src="{{ section.settings.trust_badge_3_icon | image_url: width: 40 }}" alt="{{ section.settings.trust_badge_3_text }}" width="40" height="40">
+                  {%- endif -%}
+                  <span>{{ section.settings.trust_badge_3_text }}</span>
+                </div>
+              {%- endif -%}
+            </div>
+          {%- endif -%}
+
+          <!-- Description (Short/Expanded) -->
+          {%- if section.settings.show_description and product.description != blank -%}
+            <div class="product__description-wrapper">
+              {%- if section.settings.description_style == 'collapsed' -%}
+                <div class="product__description product__description--collapsed" data-description>
+                  <div class="product__description-content" data-description-content>
+                    {{ product.description }}
+                  </div>
+                  <button type="button" class="product__description-toggle" data-description-toggle>
+                    <span data-description-toggle-text>Read more</span>
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                      <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </button>
+                </div>
+              {%- else -%}
+                <div class="product__description product__description--expanded">
+                  {{ product.description }}
+                </div>
+              {%- endif -%}
+            </div>
+          {%- endif -%}
+
+          <!-- Share Buttons -->
+          {%- if section.settings.show_share_buttons -%}
+            <div class="product__share">
+              <span class="product__share-label">Share:</span>
+              <a href="https://www.facebook.com/sharer/sharer.php?u={{ shop.url | append: product.url }}" target="_blank" class="product__share-link" aria-label="Share on Facebook">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                  <path d="M18 10a8 8 0 10-9.25 7.9v-5.6H6.5v-2.3h2.25V8.65c0-2.22 1.32-3.45 3.35-3.45.97 0 1.98.17 1.98.17v2.18h-1.12c-1.1 0-1.44.68-1.44 1.38v1.67h2.5l-.4 2.3h-2.1v5.6A8 8 0 0018 10z"/>
+                </svg>
+              </a>
+              <a href="https://twitter.com/intent/tweet?url={{ shop.url | append: product.url }}&text={{ product.title | url_param_escape }}" target="_blank" class="product__share-link" aria-label="Share on Twitter">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                  <path d="M18.29 5.29a6.98 6.98 0 01-2.01.55 3.49 3.49 0 001.53-1.93 6.98 6.98 0 01-2.21.85 3.49 3.49 0 00-5.94 3.18 9.9 9.9 0 01-7.19-3.65 3.49 3.49 0 001.08 4.66 3.47 3.47 0 01-1.58-.44v.04a3.49 3.49 0 002.8 3.42 3.48 3.48 0 01-1.58.06 3.49 3.49 0 003.26 2.42 6.99 6.99 0 01-4.33 1.49c-.28 0-.56-.02-.84-.05a9.87 9.87 0 005.35 1.57c6.42 0 9.93-5.32 9.93-9.93 0-.15 0-.3-.01-.45a7.1 7.1 0 001.74-1.81z"/>
+                </svg>
+              </a>
+              <a href="mailto:?subject={{ product.title | url_param_escape }}&body={{ shop.url | append: product.url | url_param_escape }}" class="product__share-link" aria-label="Share via Email">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M3 4h14v12H3V4z"/>
+                  <path d="M3 4l7 5 7-5"/>
+                </svg>
+              </a>
+            </div>
+          {%- endif -%}
         </div>
       </div>
     </div>
   </div>
 </div>
+
+{%- render 'product-scripts', product: product, selected_variant: selected_variant, section: section -%}
+
+<script>
+  // Initialize stock message on page load
+  document.addEventListener('DOMContentLoaded', function() {
+    const productSection = document.querySelector('[data-section-id="{{ section.id }}"]');
+    if (!productSection) return;
+    
+    const stockMessage = productSection.querySelector('[data-stock-message]');
+    const stockText = productSection.querySelector('[data-stock-text]');
+    const lowStockThreshold = {{ section.settings.low_stock_threshold | default: 5 }};
+    
+    {%- if selected_variant -%}
+      const selectedVariant = {
+        available: {{ selected_variant.available | json }},
+        inventory_management: {{ selected_variant.inventory_management | json }},
+        inventory_quantity: {{ selected_variant.inventory_quantity | json }}
+      };
+
+      if (stockMessage && stockText && selectedVariant) {
+        if (!selectedVariant.available) {
+          stockMessage.className = 'product__stock-message product__stock-message--out-of-stock';
+          stockText.textContent = 'Out of stock';
+          stockMessage.style.display = 'block';
+        } else if (selectedVariant.inventory_management && selectedVariant.inventory_quantity <= lowStockThreshold && selectedVariant.inventory_quantity > 0) {
+          stockMessage.className = 'product__stock-message product__stock-message--low-stock';
+          stockText.textContent = `Only ${selectedVariant.inventory_quantity} left in stock`;
+          stockMessage.style.display = 'block';
+        } else if (selectedVariant.inventory_management && selectedVariant.inventory_quantity > lowStockThreshold) {
+          stockMessage.className = 'product__stock-message product__stock-message--in-stock';
+          stockText.textContent = 'In stock';
+          stockMessage.style.display = 'block';
+        }
+      }
+    {%- endif -%}
+  });
+</script>
 
 <style>
   .product {
@@ -131,18 +351,39 @@
     }
   }
 
-  .product__media-wrapper {
-    position: sticky;
-    top: 6rem;
+  .product__wrapper--reverse {
+    direction: rtl;
   }
 
-  .product__media {
+  .product__wrapper--reverse > * {
+    direction: ltr;
+  }
+
+  .product__media-wrapper--sticky {
+    position: sticky;
+    top: 6rem;
+    align-self: start;
+  }
+
+  .product__media-gallery {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .product__media-main {
     position: relative;
-    margin-bottom: 1rem;
+    width: 100%;
+    aspect-ratio: 1;
+    overflow: hidden;
+    border-radius: 1rem;
+    background-color: var(--color-bg-elevated);
   }
 
   .product__media-item {
     display: none;
+    width: 100%;
+    height: 100%;
   }
 
   .product__media-item--active {
@@ -151,18 +392,46 @@
 
   .product__media-image {
     width: 100%;
-    height: auto;
+    height: 100%;
+    object-fit: {{ section.settings.media_fit }};
     border-radius: 1rem;
-    object-fit: cover;
+  }
+
+  .product__media-link {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  .product__media-video,
+  .product__media-external-video,
+  .product__media-model {
+    width: 100%;
+    height: 100%;
+  }
+
+  .product__media-video video,
+  .product__media-external-video iframe {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
   }
 
   .product__media-thumbnails {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
-    gap: 1rem;
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    gap: 0.75rem;
+  }
+
+  @media screen and (max-width: 749px) {
+    .product__media-thumbnails--desktop-only {
+      display: none;
+    }
   }
 
   .product__media-thumbnail {
+    position: relative;
+    aspect-ratio: 1;
     border: 2px solid transparent;
     border-radius: 0.5rem;
     overflow: hidden;
@@ -179,8 +448,41 @@
 
   .product__media-thumbnail img {
     width: 100%;
-    height: auto;
+    height: 100%;
+    object-fit: cover;
     display: block;
+  }
+
+  .product__media-thumbnail-icon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 2rem;
+    height: 2rem;
+    background-color: rgba(0, 0, 0, 0.6);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    z-index: 1;
+  }
+
+  .product__media-placeholder {
+    width: 100%;
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--color-bg-elevated);
+    border-radius: 1rem;
+  }
+
+  .product__info-wrapper--sticky {
+    position: sticky;
+    top: 6rem;
+    align-self: start;
   }
 
   .product__vendor {
@@ -189,6 +491,16 @@
     text-transform: uppercase;
     letter-spacing: 0.1em;
     margin-bottom: 0.5rem;
+  }
+
+  .product__vendor-link {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .product__vendor-link:hover {
+    color: var(--color-text-primary);
+    text-decoration: underline;
   }
 
   .product__title {
@@ -210,7 +522,7 @@
     display: flex;
     align-items: baseline;
     gap: 1rem;
-    margin-bottom: 1.5rem;
+    margin-bottom: 0.5rem;
     flex-wrap: wrap;
   }
 
@@ -235,57 +547,160 @@
     border-radius: 9999px;
   }
 
+  .product__tax-shipping-text {
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+    margin-bottom: 1.5rem;
+  }
+
+  .product__benefits {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    background-color: var(--color-bg-section-soft);
+    border-radius: 0.5rem;
+  }
+
+  .product__benefit-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.875rem;
+    color: var(--color-text-primary);
+  }
+
+  .product__benefit-icon {
+    flex-shrink: 0;
+    width: 1.25rem;
+    height: 1.25rem;
+    color: var(--color-accent-lime);
+  }
+
+  .product__stock-message {
+    padding: 0.75rem 1rem;
+    border-radius: 0.5rem;
+    margin-bottom: 1.5rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+  }
+
+  .product__stock-message--in-stock {
+    background-color: rgba(34, 197, 94, 0.1);
+    color: #16a34a;
+  }
+
+  .product__stock-message--low-stock {
+    background-color: rgba(251, 146, 60, 0.1);
+    color: #ea580c;
+  }
+
+  .product__stock-message--out-of-stock {
+    background-color: rgba(239, 68, 68, 0.1);
+    color: #dc2626;
+  }
+
+  .product__trust-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--color-border-soft);
+  }
+
+  .product__trust-badge {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+  }
+
+  .product__trust-badge img {
+    width: 2.5rem;
+    height: 2.5rem;
+    object-fit: contain;
+  }
+
+  .product__description-wrapper {
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--color-border-soft);
+  }
+
   .product__description {
-    margin-bottom: 2rem;
     color: var(--color-text-secondary);
     line-height: 1.6;
   }
 
-  .product__description h2,
-  .product__description h3,
-  .product__description h4 {
-    font-family: 'Space Grotesk', sans-serif;
+  .product__description--collapsed {
+    position: relative;
+    max-height: 200px;
+    overflow: hidden;
+  }
+
+  .product__description--collapsed.product__description--expanded {
+    max-height: none;
+  }
+
+  .product__description-toggle {
+    margin-top: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: none;
+    border: none;
     color: var(--color-text-primary);
-    margin-top: 1.5rem;
-    margin-bottom: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 0;
   }
 
-  .product__description ul,
-  .product__description ol {
-    padding-left: 1.5rem;
-    margin: 1rem 0;
+  .product__description-toggle svg {
+    transition: transform 0.3s ease;
   }
 
-  .product__description li {
-    margin: 0.5rem 0;
+  .product__description--expanded .product__description-toggle svg {
+    transform: rotate(180deg);
+  }
+
+  .product__share {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--color-border-soft);
+  }
+
+  .product__share-label {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+  }
+
+  .product__share-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    background-color: var(--color-bg-elevated);
+    color: var(--color-text-primary);
+    text-decoration: none;
+    transition: all 0.3s ease;
+  }
+
+  .product__share-link:hover {
+    background-color: var(--color-text-primary);
+    color: var(--color-bg-elevated);
+    transform: translateY(-2px);
   }
 </style>
-
-<script>
-  document.addEventListener('DOMContentLoaded', function() {
-    const thumbnails = document.querySelectorAll('.product__media-thumbnail');
-    const mediaItems = document.querySelectorAll('.product__media-item');
-
-    thumbnails.forEach(thumbnail => {
-      thumbnail.addEventListener('click', function() {
-        const mediaId = this.getAttribute('data-media-id');
-        
-        // Update active thumbnail
-        thumbnails.forEach(thumb => thumb.classList.remove('product__media-thumbnail--active'));
-        this.classList.add('product__media-thumbnail--active');
-        
-        // Update active media
-        mediaItems.forEach(item => {
-          if (item.getAttribute('data-media-id') === mediaId) {
-            item.classList.add('product__media-item--active');
-          } else {
-            item.classList.remove('product__media-item--active');
-          }
-        });
-      });
-    });
-  });
-</script>
 
 {% schema %}
 {
@@ -294,10 +709,279 @@
   "class": "section",
   "settings": [
     {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_sticky_info",
+      "label": "Enable sticky product info",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "media_position",
+      "label": "Media position",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "select",
+      "id": "media_size",
+      "label": "Media size",
+      "options": [
+        {
+          "value": "small",
+          "label": "Small"
+        },
+        {
+          "value": "medium",
+          "label": "Medium"
+        },
+        {
+          "value": "large",
+          "label": "Large"
+        }
+      ],
+      "default": "large"
+    },
+    {
+      "type": "select",
+      "id": "media_fit",
+      "label": "Media fit",
+      "options": [
+        {
+          "value": "contain",
+          "label": "Contain"
+        },
+        {
+          "value": "cover",
+          "label": "Cover"
+        }
+      ],
+      "default": "contain"
+    },
+    {
+      "type": "select",
+      "id": "gallery_layout",
+      "label": "Gallery layout",
+      "options": [
+        {
+          "value": "stacked",
+          "label": "Stacked"
+        },
+        {
+          "value": "thumbnail",
+          "label": "Thumbnail"
+        }
+      ],
+      "default": "stacked"
+    },
+    {
+      "type": "select",
+      "id": "image_zoom",
+      "label": "Image zoom",
+      "options": [
+        {
+          "value": "lightbox",
+          "label": "Lightbox"
+        },
+        {
+          "value": "none",
+          "label": "None"
+        }
+      ],
+      "default": "lightbox"
+    },
+    {
+      "type": "select",
+      "id": "mobile_thumbnails",
+      "label": "Mobile thumbnails",
+      "options": [
+        {
+          "value": "show",
+          "label": "Show"
+        },
+        {
+          "value": "hide",
+          "label": "Hide"
+        }
+      ],
+      "default": "show"
+    },
+    {
+      "type": "header",
+      "content": "Product information"
+    },
+    {
       "type": "checkbox",
       "id": "show_vendor",
       "label": "Show vendor",
       "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_tax_shipping_text",
+      "label": "Show tax and shipping text",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "tax_shipping_text",
+      "label": "Tax and shipping text",
+      "default": "Taxes and shipping calculated at checkout"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_benefits",
+      "label": "Show benefits",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "benefit_1",
+      "label": "Benefit 1",
+      "default": "Free shipping on orders over $50"
+    },
+    {
+      "type": "text",
+      "id": "benefit_2",
+      "label": "Benefit 2",
+      "default": "30-day money-back guarantee"
+    },
+    {
+      "type": "text",
+      "id": "benefit_3",
+      "label": "Benefit 3",
+      "default": "Secure checkout"
+    },
+    {
+      "type": "text",
+      "id": "benefit_4",
+      "label": "Benefit 4"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_stock_message",
+      "label": "Show stock message",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "low_stock_threshold",
+      "min": 1,
+      "max": 20,
+      "step": 1,
+      "unit": "items",
+      "label": "Low stock threshold",
+      "default": 5,
+      "info": "Show low stock message when inventory is below this number"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_description",
+      "label": "Show description",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "description_style",
+      "label": "Description style",
+      "options": [
+        {
+          "value": "expanded",
+          "label": "Expanded"
+        },
+        {
+          "value": "collapsed",
+          "label": "Collapsed (read more)"
+        }
+      ],
+      "default": "expanded"
+    },
+    {
+      "type": "header",
+      "content": "Trust badges"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_trust_badges",
+      "label": "Show trust badges",
+      "default": true
+    },
+    {
+      "type": "image_picker",
+      "id": "trust_badge_1_icon",
+      "label": "Trust badge 1 icon"
+    },
+    {
+      "type": "text",
+      "id": "trust_badge_1_text",
+      "label": "Trust badge 1 text",
+      "default": "Free Shipping"
+    },
+    {
+      "type": "image_picker",
+      "id": "trust_badge_2_icon",
+      "label": "Trust badge 2 icon"
+    },
+    {
+      "type": "text",
+      "id": "trust_badge_2_text",
+      "label": "Trust badge 2 text",
+      "default": "30-Day Returns"
+    },
+    {
+      "type": "image_picker",
+      "id": "trust_badge_3_icon",
+      "label": "Trust badge 3 icon"
+    },
+    {
+      "type": "text",
+      "id": "trust_badge_3_text",
+      "label": "Trust badge 3 text",
+      "default": "Secure Payment"
+    },
+    {
+      "type": "header",
+      "content": "Buttons"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_payment_button",
+      "label": "Show dynamic checkout button",
+      "default": true,
+      "info": "Lets customers check out directly using a familiar payment method. [Learn more](https://help.shopify.com/manual/online-store/os/dynamic-checkout)"
+    },
+    {
+      "type": "header",
+      "content": "Social sharing"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_share_buttons",
+      "label": "Show share buttons",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Media"
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_variants",
+      "label": "Hide variant media",
+      "default": false,
+      "info": "Hide media associated with unselected variants"
     },
     {
       "type": "checkbox",
@@ -308,4 +992,3 @@
   ]
 }
 {% endschema %}
-
