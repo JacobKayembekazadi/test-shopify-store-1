@@ -10,8 +10,7 @@
 {
   "sections": {
     "main": {
-      "type": "main-product",
-      "disabled": true,
+      "type": "product-enhanced",
       "settings": {
         "show_vendor": false,
         "enable_video_looping": false
