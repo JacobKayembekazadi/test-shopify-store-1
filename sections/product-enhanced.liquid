@@ -782,17 +782,32 @@
         });
       });
 
-      closeBtn?.addEventListener('click', () => {
-        zoomModal.hidden = true;
-        document.body.style.overflow = '';
-      });
-
-      zoomModal?.addEventListener('click', (e) => {
-        if (e.target === zoomModal) {
+      const closeModal = () => {
+        if (zoomModal) {
           zoomModal.hidden = true;
           document.body.style.overflow = '';
         }
+      };
+
+      closeBtn?.addEventListener('click', closeModal);
+
+      zoomModal?.addEventListener('click', (e) => {
+        if (e.target === zoomModal) {
+          closeModal();
+        }
       });
+
+      // Close on Escape key
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && zoomModal && !zoomModal.hidden) {
+          closeModal();
+        }
+      });
+
+      // Ensure modal starts hidden
+      if (zoomModal) {
+        zoomModal.hidden = true;
+      }
     }
 
     initSwipe() {
@@ -1560,6 +1575,10 @@
     align-items: center;
     justify-content: center;
     padding: var(--spacing-lg);
+  }
+
+  .zoom-modal[hidden] {
+    display: none !important;
   }
 
   .zoom-modal__close {
