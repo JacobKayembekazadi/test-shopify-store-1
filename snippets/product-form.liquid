@@ -5,7 +5,8 @@
 -%}
 
 {%- if product != blank -%}
-  {%- form 'product', product, class: 'product-form', id: 'product-form-' | append: section_id, data-product-id: product.id, data-section-id: section_id -%}
+  {%- assign form_id = 'product-form-' | append: section_id -%}
+  {%- form 'product', product, class: 'product-form', id: form_id, data-product-id: product.id, data-section-id: section_id -%}
     {%- unless product.has_only_default_variant -%}
       <div class="product-form__variants">
         {%- for option in product.options_with_values -%}
