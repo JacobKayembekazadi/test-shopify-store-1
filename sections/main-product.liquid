@@ -410,11 +410,18 @@
 </script>
 
 <style>
+  /* Hide any accidental debug overlays */
+  .product-page *[style*="position: fixed"][style*="z-index"]:not(.product-lightbox):not(.cart-notification) {
+    display: none !important;
+  }
+
   /* Product Page Container */
   .product-page {
     padding-top: 0;
     padding-bottom: 4rem;
     background-color: var(--color-bg-page);
+    position: relative;
+    z-index: 1;
   }
 
   @media screen and (min-width: 750px) {
