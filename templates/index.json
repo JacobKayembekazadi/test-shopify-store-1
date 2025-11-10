@@ -108,6 +108,20 @@
     },
     "goal_packs": {
       "type": "goal-packs",
+      "blocks": {
+        "product_3q6n9L": {
+          "type": "product",
+          "settings": {
+            "product": "creatine-monohydrate",
+            "badge": "Best Seller",
+            "goal": "Fat Loss • Energy • Recovery",
+            "rating": "4.9"
+          }
+        }
+      },
+      "block_order": [
+        "product_3q6n9L"
+      ],
       "settings": {
         "eyebrow": "Goal Packs",
         "title": "Curated stacks for the way you actually train.",
@@ -116,6 +130,18 @@
     },
     "programs": {
       "type": "programs",
+      "blocks": {
+        "product_f4dmhD": {
+          "type": "product",
+          "settings": {
+            "product": "nitric-shock-pre-workout-powder-fruit-punch",
+            "goal": "Low impact • Habit rebuild"
+          }
+        }
+      },
+      "block_order": [
+        "product_f4dmhD"
+      ],
       "settings": {
         "eyebrow": "Programs",
         "title": "World-class programming without the ego.",
@@ -201,6 +227,7 @@
         "shop_links",
         "company_links"
       ],
+      "disabled": true,
       "settings": {
         "tagline": "Train Smarter. Shop Better. Perform Longer.",
         "show_policy_link": true,
