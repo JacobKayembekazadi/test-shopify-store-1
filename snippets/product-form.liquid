@@ -6,7 +6,7 @@
 
 {%- if product != blank -%}
   {%- assign form_id = 'product-form-' | append: section_id -%}
-  {%- form 'product', product, class: 'product-form', id: form_id, data-product-id: product.id, data-section-id: section_id -%}
+  {%- form 'product', product, class: 'product-form', id: form_id -%}
     {%- unless product.has_only_default_variant -%}
       <div class="product-form__variants">
         {%- for option in product.options_with_values -%}
@@ -152,6 +152,17 @@
       <p class="product-form__sold-out">This product is currently sold out.</p>
     {%- endif -%}
   {%- endform -%}
+
+  <script>
+    // Add data attributes to form after render
+    (function() {
+      const form = document.getElementById('{{ form_id }}');
+      if (form) {
+        form.setAttribute('data-product-id', '{{ product.id }}');
+        form.setAttribute('data-section-id', '{{ section_id }}');
+      }
+    })();
+  </script>
 {%- endif -%}
 
 <style>
