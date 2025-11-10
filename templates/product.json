@@ -1,28 +1,19 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "main": {
       "type": "main-product",
       "settings": {
-        "enable_sticky_info": true,
-        "media_position": "left",
-        "media_size": "large",
-        "media_fit": "contain",
-        "gallery_layout": "stacked",
-        "image_zoom": "lightbox",
-        "mobile_thumbnails": "show",
-        "hide_variants": false,
-        "enable_video_looping": false,
         "show_vendor": false,
-        "show_tax_shipping_text": true,
-        "tax_shipping_text": "Taxes and shipping calculated at checkout",
-        "show_benefits": true,
-        "show_description": true,
-        "description_style": "expanded",
-        "show_trust_badges": true,
-        "show_stock_message": true,
-        "low_stock_threshold": 5,
-        "enable_payment_button": true,
-        "show_share_buttons": false
+        "enable_video_looping": false
       }
     },
     "product-extra-content": {
@@ -39,9 +30,7 @@
         "heading": "You may also like",
         "products_to_show": 4,
         "columns_desktop": 4,
-        "full_width": false,
         "show_view_all": true,
-        "view_all_style": "primary",
         "enable_desktop_slider": false
       }
     }

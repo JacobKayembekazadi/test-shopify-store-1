@@ -11,6 +11,7 @@
   "sections": {
     "header": {
       "type": "header",
+      "disabled": true,
       "settings": {
         "menu": "main-menu",
         "logo_height": 30
@@ -52,7 +53,7 @@
         "title_subtitle": "Sustain it with precision.",
         "description": "DualForce Fit combines tailored programs, smart supplementation, and premium gear into one seamless store built around your real goals.",
         "primary_button_text": "Shop Goal Packs",
-        "primary_button_link": "#goal-packs",
+        "primary_button_link": "shopify://products/creatine-monohydrate-5",
         "secondary_button_text": "Take 60s Quiz",
         "secondary_button_link": "#quiz",
         "card_title": "Shred Program • Week 6",
@@ -173,7 +174,7 @@
         "title": "Ready to build a system, not a phase?",
         "description": "Start with a goal pack or take the quiz. Either way, you'll get a complete plan—training, intake, recovery, and the exact tools to sustain it.",
         "primary_button_text": "Shop Goal Packs",
-        "primary_button_link": "#goal-packs",
+        "primary_button_link": "shopify://collections/shredd-collection",
         "secondary_button_text": "Browse All Products",
         "secondary_button_link": "#shop"
       }
