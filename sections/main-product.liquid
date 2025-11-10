@@ -1,10 +1,5 @@
 {%- liquid
-  assign product = product | default: all_products[section.settings.product]
   assign selected_variant = product.selected_or_first_available_variant
-
-  if product == empty
-    assign section_onboarding = true
-  endif
 -%}
 
 <div class="product section-spacing" data-section-id="{{ section.id }}" data-section-type="product" data-product-handle="{{ product.handle }}" data-product-id="{{ product.id }}">
@@ -287,43 +282,43 @@
   </div>
 </div>
 
-{%- render 'product-scripts', product: product, selected_variant: selected_variant, section: section -%}
+  {%- render 'product-scripts', product: product, selected_variant: selected_variant, section: section -%}
 
-<script>
-  // Initialize stock message on page load
-  document.addEventListener('DOMContentLoaded', function() {
-    const productSection = document.querySelector('[data-section-id="{{ section.id }}"]');
-    if (!productSection) return;
-    
-    const stockMessage = productSection.querySelector('[data-stock-message]');
-    const stockText = productSection.querySelector('[data-stock-text]');
-    const lowStockThreshold = {{ section.settings.low_stock_threshold | default: 5 }};
-    
-    {%- if selected_variant -%}
-      const selectedVariant = {
-        available: {{ selected_variant.available | json }},
-        inventory_management: {{ selected_variant.inventory_management | json }},
-        inventory_quantity: {{ selected_variant.inventory_quantity | json }}
-      };
+  <script>
+    // Initialize stock message on page load
+    document.addEventListener('DOMContentLoaded', function() {
+      const productSection = document.querySelector('[data-section-id="{{ section.id }}"]');
+      if (!productSection) return;
+      
+      const stockMessage = productSection.querySelector('[data-stock-message]');
+      const stockText = productSection.querySelector('[data-stock-text]');
+      const lowStockThreshold = {{ section.settings.low_stock_threshold | default: 5 }};
+      
+      {%- if selected_variant -%}
+        const selectedVariant = {
+          available: {{ selected_variant.available | json }},
+          inventory_management: {{ selected_variant.inventory_management | json }},
+          inventory_quantity: {{ selected_variant.inventory_quantity | json }}
+        };
 
-      if (stockMessage && stockText && selectedVariant) {
-        if (!selectedVariant.available) {
-          stockMessage.className = 'product__stock-message product__stock-message--out-of-stock';
-          stockText.textContent = 'Out of stock';
-          stockMessage.style.display = 'block';
-        } else if (selectedVariant.inventory_management && selectedVariant.inventory_quantity <= lowStockThreshold && selectedVariant.inventory_quantity > 0) {
-          stockMessage.className = 'product__stock-message product__stock-message--low-stock';
-          stockText.textContent = `Only ${selectedVariant.inventory_quantity} left in stock`;
-          stockMessage.style.display = 'block';
-        } else if (selectedVariant.inventory_management && selectedVariant.inventory_quantity > lowStockThreshold) {
-          stockMessage.className = 'product__stock-message product__stock-message--in-stock';
-          stockText.textContent = 'In stock';
-          stockMessage.style.display = 'block';
+        if (stockMessage && stockText && selectedVariant) {
+          if (!selectedVariant.available) {
+            stockMessage.className = 'product__stock-message product__stock-message--out-of-stock';
+            stockText.textContent = 'Out of stock';
+            stockMessage.style.display = 'block';
+          } else if (selectedVariant.inventory_management && selectedVariant.inventory_quantity <= lowStockThreshold && selectedVariant.inventory_quantity > 0) {
+            stockMessage.className = 'product__stock-message product__stock-message--low-stock';
+            stockText.textContent = `Only ${selectedVariant.inventory_quantity} left in stock`;
+            stockMessage.style.display = 'block';
+          } else if (selectedVariant.inventory_management && selectedVariant.inventory_quantity > lowStockThreshold) {
+            stockMessage.className = 'product__stock-message product__stock-message--in-stock';
+            stockText.textContent = 'In stock';
+            stockMessage.style.display = 'block';
+          }
         }
-      }
-    {%- endif -%}
-  });
-</script>
+      {%- endif -%}
+    });
+  </script>
 
 <style>
   .product {

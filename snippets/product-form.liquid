@@ -1,11 +1,9 @@
 {%- liquid
-  assign product = product | default: product_obj
   assign selected_variant = selected_variant | default: product.selected_or_first_available_variant
   assign section_id = section.id | default: 'product-form'
 -%}
 
-{%- if product != blank -%}
-  {%- form 'product', product, class: 'product-form', id: 'product-form-' | append: section_id, data-product-id: product.id, data-section-id: section_id -%}
+{%- form 'product', product, class: 'product-form', id: 'product-form-' | append: section_id, data-product-id: product.id, data-section-id: section_id -%}
     {%- unless product.has_only_default_variant -%}
       <div class="product-form__variants">
         {%- for option in product.options_with_values -%}
