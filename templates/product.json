@@ -11,6 +11,7 @@
   "sections": {
     "main": {
       "type": "main-product",
+      "disabled": true,
       "settings": {
         "show_vendor": false,
         "enable_video_looping": false
@@ -20,8 +21,13 @@
       "type": "product-extra-content",
       "settings": {
         "show_story": true,
+        "story_title": "Our Story",
+        "story_content": "",
         "show_faqs": true,
-        "show_specifications": false
+        "faqs_title": "Frequently Asked Questions",
+        "show_specifications": false,
+        "specifications_title": "Specifications",
+        "specifications_content": ""
       }
     },
     "product-recommendations": {
