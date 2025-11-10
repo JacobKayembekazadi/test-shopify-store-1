@@ -57,6 +57,27 @@
     
     <input type="hidden" name="id" value="{{ selected_variant.id }}" data-variant-id>
 
+    <!-- Gift Message (Optional) -->
+    {%- if section.settings.show_gift_message -%}
+      <div class="product-form__gift-message">
+        <label for="GiftMessage-{{ section_id }}" class="product-form__gift-message-label">
+          {{ section.settings.gift_message_label | default: 'Is this a gift? Add a note! (optional)' }}
+        </label>
+        <textarea
+          id="GiftMessage-{{ section_id }}"
+          name="properties[Gift Message]"
+          class="product-form__gift-message-input"
+          rows="3"
+          maxlength="500"
+          placeholder="{{ section.settings.gift_message_placeholder | default: 'Enter your gift message here...' }}"
+        ></textarea>
+        <div class="product-form__gift-message-counter">
+          <span class="product-form__gift-message-count" data-gift-message-count>0</span>
+          <span>/ 500</span>
+        </div>
+      </div>
+    {%- endif -%}
+
     <div class="product-form__quantity">
       <label for="Quantity-{{ section_id }}" class="product-form__quantity-label">Quantity:</label>
       <div class="product-form__quantity-input-wrapper">
@@ -79,30 +100,45 @@
     </div>
 
     <div class="product-form__buttons">
-      <button
-        type="submit"
-        name="add"
-        class="product-form__submit btn-primary"
-        {% if selected_variant.available == false %}disabled{% endif %}
-        data-add-to-cart
-      >
-        <span data-add-to-cart-text>
-          {%- if selected_variant.available -%}
-            Add to Cart
-          {%- else -%}
-            Sold Out
-          {%- endif -%}
-        </span>
-        <span class="product-form__submit-loading" data-add-to-cart-loading style="display: none;">
-          <svg class="product-form__spinner" width="20" height="20" viewBox="0 0 20 20">
-            <circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="2" fill="none" stroke-dasharray="50.27" stroke-dashoffset="50.27">
-              <animate attributeName="stroke-dasharray" dur="1.5s" values="0 50.27;50.27 0;0 50.27" repeatCount="indefinite"/>
-              <animate attributeName="stroke-dashoffset" dur="1.5s" values="0;-50.27;-100.54" repeatCount="indefinite"/>
-            </circle>
-          </svg>
-          Adding...
-        </span>
-      </button>
+      <div class="product-form__primary-buttons">
+        <button
+          type="submit"
+          name="add"
+          class="product-form__submit btn-primary"
+          {% if selected_variant.available == false %}disabled{% endif %}
+          data-add-to-cart
+        >
+          <span data-add-to-cart-text>
+            {%- if selected_variant.available -%}
+              Add to Cart
+            {%- else -%}
+              Sold Out
+            {%- endif -%}
+          </span>
+          <span class="product-form__submit-loading" data-add-to-cart-loading style="display: none;">
+            <svg class="product-form__spinner" width="20" height="20" viewBox="0 0 20 20">
+              <circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="2" fill="none" stroke-dasharray="50.27" stroke-dashoffset="50.27">
+                <animate attributeName="stroke-dasharray" dur="1.5s" values="0 50.27;50.27 0;0 50.27" repeatCount="indefinite"/>
+                <animate attributeName="stroke-dashoffset" dur="1.5s" values="0;-50.27;-100.54" repeatCount="indefinite"/>
+              </circle>
+            </svg>
+            Adding...
+          </span>
+        </button>
+
+        {%- if section.settings.show_wishlist_button -%}
+          <button
+            type="button"
+            class="product-form__wishlist-btn"
+            data-wishlist-button
+            aria-label="Add to wishlist"
+          >
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+            </svg>
+          </button>
+        {%- endif -%}
+      </div>
 
       {%- if section.settings.enable_payment_button and selected_variant.available -%}
         <div class="product-form__payment-button" data-payment-button>
@@ -191,10 +227,59 @@
     text-decoration: line-through;
   }
 
+  .product-form__gift-message {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .product-form__gift-message-label {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .product-form__gift-message-input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 2px solid var(--color-border-soft);
+    border-radius: 0.5rem;
+    font-family: inherit;
+    font-size: 0.875rem;
+    color: var(--color-text-primary);
+    background-color: var(--color-bg-elevated);
+    resize: vertical;
+    min-height: 80px;
+    transition: border-color 0.3s ease;
+  }
+
+  .product-form__gift-message-input:focus {
+    outline: none;
+    border-color: var(--color-text-primary);
+  }
+
+  .product-form__gift-message-input::placeholder {
+    color: var(--color-text-secondary);
+  }
+
+  .product-form__gift-message-counter {
+    text-align: right;
+    font-size: 0.75rem;
+    color: var(--color-text-secondary);
+  }
+
+  .product-form__gift-message-count {
+    font-weight: 600;
+  }
+
   .product-form__quantity {
     display: flex;
     align-items: center;
     gap: 1rem;
+    margin-bottom: 1.5rem;
   }
 
   .product-form__quantity-label {
@@ -273,8 +358,14 @@
     gap: 1rem;
   }
 
+  .product-form__primary-buttons {
+    display: flex;
+    gap: 0.75rem;
+    align-items: stretch;
+  }
+
   .product-form__submit {
-    width: 100%;
+    flex: 1;
     padding: 1rem 2rem;
     font-size: 1rem;
     font-weight: 700;
@@ -282,6 +373,39 @@
     letter-spacing: 0.05em;
     position: relative;
     min-height: 3.5rem;
+  }
+
+  .product-form__wishlist-btn {
+    width: 3.5rem;
+    height: 3.5rem;
+    padding: 0;
+    border: 2px solid var(--color-border-soft);
+    border-radius: 0.5rem;
+    background-color: var(--color-bg-elevated);
+    color: var(--color-text-primary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+  }
+
+  .product-form__wishlist-btn:hover {
+    border-color: var(--color-text-primary);
+    background-color: var(--color-text-primary);
+    color: var(--color-bg-elevated);
+  }
+
+  .product-form__wishlist-btn[data-wishlist-active="true"] {
+    border-color: var(--color-text-primary);
+    background-color: var(--color-text-primary);
+    color: var(--color-bg-elevated);
+  }
+
+  .product-form__wishlist-btn svg {
+    width: 20px;
+    height: 20px;
   }
 
   .product-form__submit:disabled {
