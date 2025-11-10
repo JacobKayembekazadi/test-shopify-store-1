@@ -1,0 +1,51 @@
+{%- if recommendations.products_count > 0 -%}
+  <div class="cart-recommendations section-spacing">
+    <div class="container">
+      <h2 class="cart-recommendations__title">{{ section.settings.heading | default: 'You may also like' }}</h2>
+      <div class="cart-recommendations__products grid grid--4-col">
+        {%- for product in recommendations.products limit: section.settings.products_to_show -%}
+          <div class="cart-recommendations__product-item">
+            {% render 'product-card', product: product, show_badge: false, show_rating: false %}
+          </div>
+        {%- endfor -%}
+      </div>
+    </div>
+  </div>
+{%- endif -%}
+
+<style>
+  .cart-recommendations__title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--color-text-primary);
+    margin-bottom: 2rem;
+    text-align: center;
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Cart Recommendations",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "You may also like"
+    },
+    {
+      "type": "range",
+      "id": "products_to_show",
+      "min": 2,
+      "max": 10,
+      "step": 1,
+      "default": 4,
+      "label": "Products to show"
+    }
+  ]
+}
+{% endschema %}
+

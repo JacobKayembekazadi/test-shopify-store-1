@@ -25,11 +25,14 @@
         {%- endif -%}
       </a>
 
-      {%- if product_obj.compare_at_price > product_obj.price -%}
-        {%- liquid
-          assign discount_amount = product_obj.compare_at_price | minus: product_obj.price
-          assign discount_percentage = discount_amount | times: 100.0 | divided_by: product_obj.compare_at_price | round
-        -%}
+      {%- liquid
+        assign variant = product_obj.selected_or_first_available_variant
+        if variant.compare_at_price > variant.price
+          assign discount_amount = variant.compare_at_price | minus: variant.price
+          assign discount_percentage = discount_amount | times: 100.0 | divided_by: variant.compare_at_price | round
+        endif
+      -%}
+      {%- if discount_percentage > 0 -%}
         <span class="product-card__discount">
           SAVE {{ discount_percentage }}%
         </span>
@@ -57,11 +60,11 @@
 
       <div class="product-card__price-wrapper">
         <span class="product-card__price">
-          {{ product_obj.price | money }}
+          {{ product_obj.selected_or_first_available_variant.price | money }}
         </span>
-        {%- if product_obj.compare_at_price > product_obj.price -%}
+        {%- if product_obj.selected_or_first_available_variant.compare_at_price > product_obj.selected_or_first_available_variant.price -%}
           <span class="product-card__compare-price">
-            {{ product_obj.compare_at_price | money }}
+            {{ product_obj.selected_or_first_available_variant.compare_at_price | money }}
           </span>
         {%- endif -%}
       </div>

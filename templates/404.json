@@ -1,0 +1,17 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-404",
+      "settings": {
+        "heading": "404 Page Not Found",
+        "subtext": "The page you were looking for does not exist.",
+        "button_label": "Continue shopping",
+        "button_link": "/collections/all"
+      }
+    }
+  },
+  "order": [
+    "main"
+  ]
+}
+

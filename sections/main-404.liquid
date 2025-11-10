@@ -1,0 +1,80 @@
+<div class="page-404 section-spacing">
+  <div class="container">
+    <div class="page-404__content">
+      <h1 class="page-404__title">{{ section.settings.heading | default: '404 Page Not Found' }}</h1>
+      <p class="page-404__text">{{ section.settings.subtext | default: 'The page you were looking for does not exist.' }}</p>
+      <a href="{{ section.settings.button_link | default: routes.all_products_collection_url }}" class="page-404__button btn-primary">
+        {{ section.settings.button_label | default: 'Continue shopping' }}
+      </a>
+    </div>
+  </div>
+</div>
+
+<style>
+  .page-404 {
+    min-height: 60vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .page-404__content {
+    text-align: center;
+    max-width: 32rem;
+    margin: 0 auto;
+  }
+
+  .page-404__title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 4rem;
+    font-weight: 700;
+    color: var(--color-text-primary);
+    margin-bottom: 1rem;
+  }
+
+  .page-404__text {
+    font-size: 1.125rem;
+    color: var(--color-text-secondary);
+    margin-bottom: 2rem;
+    line-height: 1.6;
+  }
+
+  .page-404__button {
+    display: inline-block;
+  }
+</style>
+
+{% schema %}
+{
+  "name": "404",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "404 Page Not Found"
+    },
+    {
+      "type": "textarea",
+      "id": "subtext",
+      "label": "Subtext",
+      "default": "The page you were looking for does not exist."
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Continue shopping"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link",
+      "default": "/collections/all"
+    }
+  ]
+}
+{% endschema %}
+

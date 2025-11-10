@@ -1,0 +1,311 @@
+{%- liquid
+  assign product = product | default: all_products[section.settings.product]
+  assign selected_variant = product.selected_or_first_available_variant
+
+  if product == empty
+    assign section_onboarding = true
+  endif
+-%}
+
+<div class="product section-spacing" data-section-id="{{ section.id }}" data-section-type="product" data-product-handle="{{ product.handle }}">
+  <div class="container">
+    <div class="product__wrapper">
+      <div class="product__media-wrapper">
+        {%- if product.media.size > 0 -%}
+          <div class="product__media">
+            {%- for media in product.media -%}
+              <div class="product__media-item {% if forloop.first %}product__media-item--active{% endif %}" data-media-id="{{ media.id }}">
+                {%- case media.media_type -%}
+                  {%- when 'image' -%}
+                    <img
+                      src="{{ media | image_url: width: 1200 }}"
+                      alt="{{ media.alt | escape }}"
+                      class="product__media-image"
+                      width="1200"
+                      height="1200"
+                      loading="lazy"
+                    >
+                  {%- when 'video' -%}
+                    {{ media | video_tag: image_size: "1200x", loop: section.settings.enable_video_looping, controls: true, preload: "none" }}
+                  {%- when 'external_video' -%}
+                    {%- assign video_class = 'js-' | append: media.host -%}
+                    {%- if media.host == 'youtube' -%}
+                      {{ media | external_video_tag: class: video_class, loading: "lazy", loop: section.settings.enable_video_looping, playlist: media.external_id }}
+                    {%- else -%}
+                      {{ media | external_video_tag: class: video_class, loading: "lazy", loop: section.settings.enable_video_looping }}
+                    {%- endif -%}
+                  {%- when 'model' -%}
+                    {{ media | model_viewer_tag: image_size: "1200x", toggleable: true, data-model-id: media.id }}
+                {%- endcase -%}
+              </div>
+            {%- endfor -%}
+          </div>
+
+          {%- if product.media.size > 1 -%}
+            <div class="product__media-thumbnails">
+              {%- for media in product.media -%}
+                <button
+                  type="button"
+                  class="product__media-thumbnail {% if forloop.first %}product__media-thumbnail--active{% endif %}"
+                  data-media-id="{{ media.id }}"
+                  aria-label="View media {{ forloop.index }}"
+                >
+                  <img
+                    src="{{ media | image_url: width: 200 }}"
+                    alt="{{ media.alt | escape }}"
+                    width="200"
+                    height="200"
+                    loading="lazy"
+                  >
+                </button>
+              {%- endfor -%}
+            </div>
+          {%- endif -%}
+        {%- else -%}
+          <div class="product__media-placeholder">
+            {{ 'product-1' | placeholder_svg_tag: 'product__media-placeholder-svg' }}
+          </div>
+        {%- endif -%}
+      </div>
+
+      <div class="product__info-wrapper">
+        <div class="product__info">
+          {%- if section.settings.show_vendor and product.vendor != blank -%}
+            <p class="product__vendor">{{ product.vendor }}</p>
+          {%- endif -%}
+
+          <h1 class="product__title">{{ product.title | default: 'Product title' }}</h1>
+
+          <div class="product__price-wrapper">
+            <span class="product__price">
+              {{ selected_variant.price | money }}
+            </span>
+            {%- if selected_variant.compare_at_price > selected_variant.price -%}
+              <span class="product__compare-price">
+                {{ selected_variant.compare_at_price | money }}
+              </span>
+              {%- liquid
+                assign discount_amount = selected_variant.compare_at_price | minus: selected_variant.price
+                assign discount_percentage = discount_amount | times: 100.0 | divided_by: selected_variant.compare_at_price | round
+              -%}
+              <span class="product__discount-badge">Save {{ discount_percentage }}%</span>
+            {%- endif -%}
+          </div>
+
+          {%- if product.description != blank -%}
+            <div class="product__description">
+              {{ product.description }}
+            </div>
+          {%- endif -%}
+
+          {% render 'product-form', product: product, selected_variant: selected_variant %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .product {
+    padding-top: 2rem;
+    padding-bottom: 4rem;
+  }
+
+  @media screen and (min-width: 750px) {
+    .product {
+      padding-top: 4rem;
+      padding-bottom: 6rem;
+    }
+  }
+
+  .product__wrapper {
+    display: grid;
+    gap: 3rem;
+    align-items: start;
+  }
+
+  @media screen and (min-width: 990px) {
+    .product__wrapper {
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+    }
+  }
+
+  .product__media-wrapper {
+    position: sticky;
+    top: 6rem;
+  }
+
+  .product__media {
+    position: relative;
+    margin-bottom: 1rem;
+  }
+
+  .product__media-item {
+    display: none;
+  }
+
+  .product__media-item--active {
+    display: block;
+  }
+
+  .product__media-image {
+    width: 100%;
+    height: auto;
+    border-radius: 1rem;
+    object-fit: cover;
+  }
+
+  .product__media-thumbnails {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+    gap: 1rem;
+  }
+
+  .product__media-thumbnail {
+    border: 2px solid transparent;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    cursor: pointer;
+    padding: 0;
+    background: none;
+    transition: border-color 0.3s ease;
+  }
+
+  .product__media-thumbnail:hover,
+  .product__media-thumbnail--active {
+    border-color: var(--color-text-primary);
+  }
+
+  .product__media-thumbnail img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .product__vendor {
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 0.5rem;
+  }
+
+  .product__title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--color-text-primary);
+    margin-bottom: 1rem;
+    line-height: 1.2;
+  }
+
+  @media screen and (min-width: 750px) {
+    .product__title {
+      font-size: 2.5rem;
+    }
+  }
+
+  .product__price-wrapper {
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+  }
+
+  .product__price {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--color-text-primary);
+  }
+
+  .product__compare-price {
+    font-size: 1.125rem;
+    color: var(--color-text-secondary);
+    text-decoration: line-through;
+  }
+
+  .product__discount-badge {
+    background-color: var(--color-accent-lime);
+    color: var(--color-text-primary);
+    font-size: 0.875rem;
+    font-weight: 700;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+  }
+
+  .product__description {
+    margin-bottom: 2rem;
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+  }
+
+  .product__description h2,
+  .product__description h3,
+  .product__description h4 {
+    font-family: 'Space Grotesk', sans-serif;
+    color: var(--color-text-primary);
+    margin-top: 1.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .product__description ul,
+  .product__description ol {
+    padding-left: 1.5rem;
+    margin: 1rem 0;
+  }
+
+  .product__description li {
+    margin: 0.5rem 0;
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const thumbnails = document.querySelectorAll('.product__media-thumbnail');
+    const mediaItems = document.querySelectorAll('.product__media-item');
+
+    thumbnails.forEach(thumbnail => {
+      thumbnail.addEventListener('click', function() {
+        const mediaId = this.getAttribute('data-media-id');
+        
+        // Update active thumbnail
+        thumbnails.forEach(thumb => thumb.classList.remove('product__media-thumbnail--active'));
+        this.classList.add('product__media-thumbnail--active');
+        
+        // Update active media
+        mediaItems.forEach(item => {
+          if (item.getAttribute('data-media-id') === mediaId) {
+            item.classList.add('product__media-item--active');
+          } else {
+            item.classList.remove('product__media-item--active');
+          }
+        });
+      });
+    });
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Product",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_vendor",
+      "label": "Show vendor",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_video_looping",
+      "label": "Enable video looping",
+      "default": false
+    }
+  ]
+}
+{% endschema %}
+

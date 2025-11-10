@@ -1,0 +1,377 @@
+<div class="cart section-spacing" data-section-id="{{ section.id }}">
+  <div class="container">
+    <div class="cart__wrapper">
+      <h1 class="cart__title">Shopping Cart</h1>
+
+      {%- if cart.item_count > 0 -%}
+        <form action="{{ routes.cart_url }}" method="post" class="cart__form" id="cart">
+          <div class="cart__items">
+            {%- for item in cart.items -%}
+              <div class="cart-item" data-item-key="{{ item.key }}">
+                <div class="cart-item__image">
+                  <a href="{{ item.url }}">
+                    <img
+                      src="{{ item.image | image_url: width: 200 }}"
+                      alt="{{ item.image.alt | escape }}"
+                      width="200"
+                      height="200"
+                      loading="lazy"
+                    >
+                  </a>
+                </div>
+
+                <div class="cart-item__details">
+                  <h3 class="cart-item__title">
+                    <a href="{{ item.url }}">{{ item.product.title }}</a>
+                  </h3>
+                  {%- unless item.product.has_only_default_variant -%}
+                    <p class="cart-item__variant">{{ item.variant.title }}</p>
+                  {%- endunless -%}
+                  <p class="cart-item__price">{{ item.final_line_price | money }}</p>
+                </div>
+
+                <div class="cart-item__quantity">
+                  <label for="Quantity-{{ item.key }}" class="visually-hidden">Quantity</label>
+                  <div class="cart-item__quantity-wrapper">
+                    <button type="button" class="cart-item__quantity-btn" data-quantity-decrease data-item-key="{{ item.key }}" aria-label="Decrease quantity">-</button>
+                    <input
+                      type="number"
+                      id="Quantity-{{ item.key }}"
+                      name="updates[]"
+                      value="{{ item.quantity }}"
+                      min="0"
+                      class="cart-item__quantity-input"
+                      data-item-key="{{ item.key }}"
+                      data-item-quantity
+                    >
+                    <button type="button" class="cart-item__quantity-btn" data-quantity-increase data-item-key="{{ item.key }}" aria-label="Increase quantity">+</button>
+                  </div>
+                  <a href="{{ routes.cart_change_url }}?id={{ item.key }}&quantity=0" class="cart-item__remove" data-remove-item>Remove</a>
+                </div>
+
+                <div class="cart-item__total">
+                  {{ item.final_line_price | money }}
+                </div>
+              </div>
+            {%- endfor -%}
+          </div>
+
+          <div class="cart__footer">
+            <div class="cart__summary">
+              <div class="cart__subtotal">
+                <span class="cart__subtotal-label">Subtotal</span>
+                <span class="cart__subtotal-price">{{ cart.total_price | money }}</span>
+              </div>
+              <p class="cart__tax-note">Taxes and shipping calculated at checkout</p>
+            </div>
+
+            <div class="cart__actions">
+              <button type="submit" name="update" class="cart__update-btn btn-secondary">
+                Update Cart
+              </button>
+              <button type="submit" name="checkout" class="cart__checkout-btn btn-primary">
+                Checkout
+              </button>
+            </div>
+          </div>
+        </form>
+      {%- else -%}
+        <div class="cart__empty">
+          <p class="cart__empty-message">Your cart is empty.</p>
+          <a href="{{ routes.all_products_collection_url }}" class="cart__empty-link btn-primary">
+            Continue Shopping
+          </a>
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+</div>
+
+<style>
+  .cart__title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--color-text-primary);
+    margin-bottom: 2rem;
+  }
+
+  .cart__form {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .cart__items {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .cart-item {
+    display: grid;
+    grid-template-columns: 120px 1fr auto auto;
+    gap: 1.5rem;
+    padding: 1.5rem;
+    background-color: var(--color-bg-elevated);
+    border-radius: 1rem;
+    align-items: start;
+  }
+
+  @media screen and (max-width: 749px) {
+    .cart-item {
+      grid-template-columns: 80px 1fr;
+      gap: 1rem;
+    }
+
+    .cart-item__quantity,
+    .cart-item__total {
+      grid-column: 2;
+    }
+  }
+
+  .cart-item__image img {
+    width: 100%;
+    height: auto;
+    border-radius: 0.5rem;
+  }
+
+  .cart-item__title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+
+  .cart-item__title a {
+    color: var(--color-text-primary);
+    text-decoration: none;
+  }
+
+  .cart-item__variant {
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+    margin-bottom: 0.5rem;
+  }
+
+  .cart-item__price {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+  }
+
+  .cart-item__quantity-wrapper {
+    display: flex;
+    align-items: center;
+    border: 2px solid var(--color-border-soft);
+    border-radius: 0.5rem;
+    overflow: hidden;
+    margin-bottom: 0.5rem;
+  }
+
+  .cart-item__quantity-btn {
+    width: 2rem;
+    height: 2rem;
+    border: none;
+    background-color: var(--color-bg-elevated);
+    color: var(--color-text-primary);
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  .cart-item__quantity-btn:hover {
+    background-color: var(--color-bg-section-soft);
+  }
+
+  .cart-item__quantity-input {
+    width: 3rem;
+    height: 2rem;
+    border: none;
+    border-left: 2px solid var(--color-border-soft);
+    border-right: 2px solid var(--color-border-soft);
+    text-align: center;
+    font-size: 0.875rem;
+    font-weight: 600;
+    -moz-appearance: textfield;
+  }
+
+  .cart-item__quantity-input::-webkit-outer-spin-button,
+  .cart-item__quantity-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  .cart-item__remove {
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+    text-decoration: underline;
+    cursor: pointer;
+  }
+
+  .cart-item__total {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: var(--color-text-primary);
+    text-align: right;
+  }
+
+  .cart__footer {
+    padding-top: 2rem;
+    border-top: 2px solid var(--color-border-soft);
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  @media screen and (min-width: 750px) {
+    .cart__footer {
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
+  }
+
+  .cart__summary {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .cart__subtotal {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 2rem;
+  }
+
+  .cart__subtotal-label {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+  }
+
+  .cart__subtotal-price {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--color-text-primary);
+  }
+
+  .cart__tax-note {
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+  }
+
+  .cart__actions {
+    display: flex;
+    gap: 1rem;
+  }
+
+  .cart__update-btn,
+  .cart__checkout-btn {
+    min-width: 10rem;
+  }
+
+  .cart__empty {
+    text-align: center;
+    padding: 4rem 2rem;
+  }
+
+  .cart__empty-message {
+    font-size: 1.125rem;
+    color: var(--color-text-secondary);
+    margin-bottom: 2rem;
+  }
+
+  .cart__empty-link {
+    display: inline-block;
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const quantityInputs = document.querySelectorAll('[data-item-quantity]');
+    const quantityDecrease = document.querySelectorAll('[data-quantity-decrease]');
+    const quantityIncrease = document.querySelectorAll('[data-quantity-increase]');
+    const removeLinks = document.querySelectorAll('[data-remove-item]');
+
+    // Quantity controls
+    quantityDecrease.forEach(btn => {
+      btn.addEventListener('click', function() {
+        const itemKey = this.getAttribute('data-item-key');
+        const input = document.querySelector(`[data-item-quantity][data-item-key="${itemKey}"]`);
+        if (input) {
+          const currentValue = parseInt(input.value) || 1;
+          if (currentValue > 1) {
+            input.value = currentValue - 1;
+            updateCartItem(itemKey, currentValue - 1);
+          }
+        }
+      });
+    });
+
+    quantityIncrease.forEach(btn => {
+      btn.addEventListener('click', function() {
+        const itemKey = this.getAttribute('data-item-key');
+        const input = document.querySelector(`[data-item-quantity][data-item-key="${itemKey}"]`);
+        if (input) {
+          const currentValue = parseInt(input.value) || 1;
+          input.value = currentValue + 1;
+          updateCartItem(itemKey, currentValue + 1);
+        }
+      });
+    });
+
+    // Remove item
+    removeLinks.forEach(link => {
+      link.addEventListener('click', function(e) {
+        e.preventDefault();
+        const url = this.getAttribute('href');
+        if (confirm('Remove this item from cart?')) {
+          window.location.href = url;
+        }
+      });
+    });
+
+    function updateCartItem(itemKey, quantity) {
+      fetch(window.routes.cart_change_url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          id: itemKey,
+          quantity: quantity
+        })
+      })
+      .then(() => {
+        window.location.reload();
+      })
+      .catch(error => {
+        console.error('Error updating cart:', error);
+      });
+    }
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Cart",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_vendor",
+      "label": "Show vendor",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_cart_notes",
+      "label": "Enable cart notes",
+      "default": false
+    }
+  ]
+}
+{% endschema %}
+

@@ -1,0 +1,212 @@
+<div class="search-modal" id="search-modal" data-search-modal aria-hidden="true">
+  <div class="search-modal__overlay" data-search-modal-close></div>
+  <div class="search-modal__content">
+    <button class="search-modal__close" data-search-modal-close aria-label="Close search">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="m18 6-12 12M6 6l12 12"/>
+      </svg>
+    </button>
+
+    <form action="{{ routes.search_url }}" method="get" class="search-modal__form">
+      <input
+        type="search"
+        name="q"
+        value="{{ search.terms | escape }}"
+        placeholder="Search products..."
+        class="search-modal__input"
+        autocomplete="off"
+        autofocus
+        data-search-input
+      >
+      <button type="submit" class="search-modal__submit btn-primary">Search</button>
+    </form>
+
+    <div class="search-modal__results" data-search-results></div>
+  </div>
+</div>
+
+<style>
+  .search-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1000;
+    display: none;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 2rem;
+  }
+
+  .search-modal[aria-hidden="false"] {
+    display: flex;
+  }
+
+  .search-modal__overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+  }
+
+  .search-modal__content {
+    position: relative;
+    width: 100%;
+    max-width: 600px;
+    background-color: var(--color-bg-elevated);
+    border-radius: 1rem;
+    padding: 2rem;
+    margin-top: 4rem;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    z-index: 1001;
+  }
+
+  .search-modal__close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    width: 2.5rem;
+    height: 2.5rem;
+    border: none;
+    background: none;
+    cursor: pointer;
+    color: var(--color-text-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .search-modal__form {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  .search-modal__input {
+    flex: 1;
+    padding: 1rem;
+    border: 2px solid var(--color-border-soft);
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    color: var(--color-text-primary);
+    background-color: var(--color-bg-elevated);
+  }
+
+  .search-modal__input:focus {
+    outline: none;
+    border-color: var(--color-text-primary);
+  }
+
+  .search-modal__submit {
+    padding: 1rem 2rem;
+    white-space: nowrap;
+  }
+
+  .search-modal__results {
+    max-height: 400px;
+    overflow-y: auto;
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const searchModal = document.getElementById('search-modal');
+    const searchToggle = document.querySelector('[data-search-toggle]');
+    const searchClose = document.querySelectorAll('[data-search-modal-close]');
+    const searchInput = document.querySelector('[data-search-input]');
+    const searchResults = document.querySelector('[data-search-results]');
+
+    // Open modal
+    if (searchToggle) {
+      searchToggle.addEventListener('click', function() {
+        searchModal.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
+        if (searchInput) {
+          setTimeout(() => searchInput.focus(), 100);
+        }
+      });
+    }
+
+    // Close modal
+    searchClose.forEach(btn => {
+      btn.addEventListener('click', function() {
+        searchModal.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+      });
+    });
+
+    // Close on Escape key
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape' && searchModal.getAttribute('aria-hidden') === 'false') {
+        searchModal.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+      }
+    });
+
+    // Predictive search (optional)
+    if (searchInput && window.routes && window.routes.predictive_search_url) {
+      let searchTimeout;
+      searchInput.addEventListener('input', function() {
+        clearTimeout(searchTimeout);
+        const query = this.value.trim();
+
+        if (query.length < 2) {
+          searchResults.innerHTML = '';
+          return;
+        }
+
+        searchTimeout = setTimeout(() => {
+          fetch(`${window.routes.predictive_search_url}?q=${encodeURIComponent(query)}&resources[type]=product&resources[limit]=5`)
+            .then(response => response.json())
+            .then(data => {
+              if (data.resources && data.resources.results && data.resources.results.products) {
+                displaySearchResults(data.resources.results.products);
+              }
+            })
+            .catch(error => {
+              console.error('Search error:', error);
+            });
+        }, 300);
+      });
+    }
+
+    function displaySearchResults(products) {
+      if (products.length === 0) {
+        searchResults.innerHTML = '<p class="search-modal__no-results">No products found</p>';
+        return;
+      }
+
+      const resultsHTML = products.map(product => `
+        <a href="${product.url}" class="search-modal__result-item">
+          ${product.featured_image ? `<img src="${product.featured_image}" alt="${product.title}" class="search-modal__result-image">` : ''}
+          <div class="search-modal__result-content">
+            <h4 class="search-modal__result-title">${product.title}</h4>
+            <p class="search-modal__result-price">${formatMoney(product.price)}</p>
+          </div>
+        </a>
+      `).join('');
+
+      searchResults.innerHTML = resultsHTML;
+    }
+
+    function formatMoney(cents) {
+      return new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD'
+      }).format(cents / 100);
+    }
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Search Modal",
+  "tag": "div",
+  "settings": []
+}
+{% endschema %}
+

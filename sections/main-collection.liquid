@@ -1,0 +1,157 @@
+{%- paginate collection.products by section.settings.products_per_page -%}
+  <div class="collection section-spacing" data-section-id="{{ section.id }}">
+    <div class="container">
+      {%- if collection.title != blank -%}
+        <div class="collection__header">
+          <h1 class="collection__title">{{ collection.title }}</h1>
+          {%- if collection.description != blank -%}
+            <div class="collection__description">
+              {{ collection.description }}
+            </div>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+
+      {%- if collection.products_count > 0 -%}
+        <div class="collection__products grid grid--{{ section.settings.columns_desktop }}-col">
+          {%- for product in collection.products -%}
+            <div class="collection__product-item">
+              {% render 'product-card', product: product, show_badge: false, show_rating: false %}
+            </div>
+          {%- endfor -%}
+        </div>
+
+        {%- if paginate.pages > 1 -%}
+          <nav class="collection__pagination" aria-label="Pagination">
+            {%- if paginate.previous -%}
+              <a href="{{ paginate.previous.url }}" class="collection__pagination-link collection__pagination-link--prev">
+                Previous
+              </a>
+            {%- endif -%}
+
+            <span class="collection__pagination-info">
+              Page {{ paginate.current_page }} of {{ paginate.pages }}
+            </span>
+
+            {%- if paginate.next -%}
+              <a href="{{ paginate.next.url }}" class="collection__pagination-link collection__pagination-link--next">
+                Next
+              </a>
+            {%- endif -%}
+          </nav>
+        {%- endif -%}
+      {%- else -%}
+        <div class="collection__empty">
+          <p>No products found in this collection.</p>
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+{%- endpaginate -%}
+
+<style>
+  .collection__header {
+    margin-bottom: 3rem;
+    text-align: center;
+  }
+
+  .collection__title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--color-text-primary);
+    margin-bottom: 1rem;
+  }
+
+  .collection__description {
+    max-width: 42rem;
+    margin: 0 auto;
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+  }
+
+  .collection__products {
+    margin-bottom: 3rem;
+  }
+
+  .collection__product-item {
+    width: 100%;
+  }
+
+  .collection__pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+    margin-top: 3rem;
+  }
+
+  .collection__pagination-link {
+    padding: 0.75rem 1.5rem;
+    border: 2px solid var(--color-border-soft);
+    border-radius: 0.5rem;
+    color: var(--color-text-primary);
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+  }
+
+  .collection__pagination-link:hover {
+    border-color: var(--color-text-primary);
+    background-color: var(--color-text-primary);
+    color: var(--color-bg-elevated);
+  }
+
+  .collection__pagination-info {
+    color: var(--color-text-secondary);
+    font-size: 0.875rem;
+  }
+
+  .collection__empty {
+    text-align: center;
+    padding: 4rem 2rem;
+    color: var(--color-text-secondary);
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Collection",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "range",
+      "id": "products_per_page",
+      "min": 8,
+      "max": 24,
+      "step": 4,
+      "default": 12,
+      "label": "Products per page"
+    },
+    {
+      "type": "range",
+      "id": "columns_desktop",
+      "min": 2,
+      "max": 5,
+      "step": 1,
+      "default": 3,
+      "label": "Number of columns on desktop"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_filtering",
+      "default": true,
+      "label": "Enable filtering",
+      "info": "Customize filters in the theme editor"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_sorting",
+      "default": true,
+      "label": "Enable sorting"
+    }
+  ]
+}
+{% endschema %}
+

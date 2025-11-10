@@ -133,17 +133,29 @@ document.addEventListener('DOMContentLoaded', () => {
   initSmoothScroll();
   Cart.updateCartCount();
 
-  // Handle product card add to cart
-  document.querySelectorAll('.product-card__button').forEach(button => {
-    button.addEventListener('click', async (e) => {
-      e.preventDefault();
-      const form = button.closest('form');
-      if (form) {
-        const variantId = form.querySelector('input[name="id"]').value;
-        await Cart.addItem(variantId, 1);
-      }
+    // Handle product card add to cart
+    document.querySelectorAll('.product-card__button').forEach(button => {
+      button.addEventListener('click', async (e) => {
+        e.preventDefault();
+        const form = button.closest('form');
+        if (form) {
+          const variantIdInput = form.querySelector('input[name="id"]');
+          if (variantIdInput) {
+            const variantId = variantIdInput.value;
+            const quantity = 1;
+            await Cart.addItem(variantId, quantity);
+          } else {
+            console.error('Variant ID not found');
+            Cart.showNotification('Please select product options', 'error');
+          }
+        }
+      });
     });
-  });
+
+    // Update cart count on page load
+    if (window.Cart) {
+      Cart.updateCartCount();
+    }
 });
 
 // Cart notification styles

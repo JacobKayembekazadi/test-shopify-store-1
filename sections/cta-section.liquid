@@ -17,13 +17,13 @@
 
       <div class="cta-section__actions">
         {%- if section.settings.primary_button_text != blank -%}
-          <a href="{{ section.settings.primary_button_link | default: '#goal-packs' }}" class="btn-primary">
+          <a href="{{ section.settings.primary_button_link | default: routes.all_products_collection_url }}" class="btn-primary">
             {{ section.settings.primary_button_text }}
           </a>
         {%- endif -%}
 
         {%- if section.settings.secondary_button_text != blank -%}
-          <a href="{{ section.settings.secondary_button_link | default: '#shop' }}" class="btn-secondary">
+          <a href="{{ section.settings.secondary_button_link | default: routes.all_products_collection_url }}" class="btn-secondary">
             {{ section.settings.secondary_button_text }}
           </a>
         {%- endif -%}
