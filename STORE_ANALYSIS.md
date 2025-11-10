@@ -243,3 +243,5 @@ All major pages and functionality have been implemented and tested. The store is
 
 The store is ready for deployment and testing in a live Shopify environment.
 
+
+

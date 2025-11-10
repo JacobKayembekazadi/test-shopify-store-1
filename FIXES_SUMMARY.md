@@ -139,3 +139,5 @@
 - Product recommendations require Shopify's recommendation engine
 - Some features may require additional Shopify apps for full functionality
 
+
+

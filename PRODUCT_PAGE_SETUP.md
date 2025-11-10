@@ -294,3 +294,5 @@ For issues or questions:
 3. Test with different products
 4. Check Shopify documentation
 
+
+

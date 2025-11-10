@@ -114,3 +114,5 @@ After these fixes, product pages should:
 - If a product doesn't exist, Shopify shows a 404 page before the template loads
 - Template errors can cause 404s, so keeping the code simple and clean is important
 
+
+

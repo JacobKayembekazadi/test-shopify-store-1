@@ -51,3 +51,5 @@ If the overlay persists after trying all steps:
 3. Check network tab for failed requests
 4. Verify you're viewing the live storefront, not theme editor preview
 
+
+
