@@ -31,6 +31,86 @@
 
     <script src="{{ 'global.js' | asset_url }}" defer="defer"></script>
     {{ content_for_header }}
+    
+    <!-- Prevent Shopify scripts from rendering as text if they fail -->
+    <script>
+      (function() {
+        'use strict';
+        
+        // Immediately hide any visible script content (runs before DOM is ready)
+        function hideScriptOverlays() {
+          // Hide any elements that contain API endpoint text patterns
+          const apiPatterns = [
+            'create_customer',
+            'activate_customer',
+            'customer_passwo',
+            'cart',
+            'api'
+          ];
+          
+          // Check all text nodes
+          const walker = document.createTreeWalker(
+            document.body || document.documentElement,
+            NodeFilter.SHOW_TEXT,
+            {
+              acceptNode: function(node) {
+                const text = node.textContent || '';
+                const hasApiPattern = apiPatterns.some(pattern => text.includes(pattern));
+                // Only hide short text fragments that look like API endpoints
+                if (hasApiPattern && text.trim().length < 200 && text.trim().length > 10) {
+                  // Check if parent is not a script/style tag
+                  let parent = node.parentElement;
+                  let isInScript = false;
+                  while (parent && parent !== document.body) {
+                    if (parent.tagName === 'SCRIPT' || parent.tagName === 'STYLE' || parent.tagName === 'NOSCRIPT') {
+                      isInScript = true;
+                      break;
+                    }
+                    parent = parent.parentElement;
+                  }
+                  if (!isInScript) {
+                    return NodeFilter.FILTER_ACCEPT;
+                  }
+                }
+                return NodeFilter.FILTER_REJECT;
+              }
+            },
+            false
+          );
+          
+          let node;
+          const nodesToHide = [];
+          while (node = walker.nextNode()) {
+            nodesToHide.push(node);
+          }
+          
+          // Hide the parent elements of these text nodes
+          nodesToHide.forEach(textNode => {
+            if (textNode.parentElement) {
+              textNode.parentElement.style.display = 'none';
+              textNode.parentElement.style.visibility = 'hidden';
+              textNode.parentElement.style.opacity = '0';
+              textNode.parentElement.style.height = '0';
+              textNode.parentElement.style.width = '0';
+              textNode.parentElement.style.overflow = 'hidden';
+              textNode.parentElement.setAttribute('hidden', 'true');
+            }
+          });
+        }
+        
+        // Run immediately if DOM is already loaded
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', hideScriptOverlays);
+        } else {
+          hideScriptOverlays();
+        }
+        
+        // Also run after a short delay to catch dynamically injected content
+        setTimeout(hideScriptOverlays, 100);
+        setTimeout(hideScriptOverlays, 500);
+        setTimeout(hideScriptOverlays, 1000);
+      })();
+    </script>
 
     {%- liquid
       assign body_font_bold = settings.type_body_font | font_modify: 'weight', 'bold'

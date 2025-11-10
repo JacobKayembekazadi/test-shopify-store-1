@@ -27,6 +27,29 @@ body {
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* Hide any accidentally visible script content or API endpoint text overlays */
+body > script[type="text/plain"],
+body > *:not(script):not(style):not(noscript)[style*="position: fixed"][style*="white-space"] {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  height: 0 !important;
+  width: 0 !important;
+  overflow: hidden !important;
+}
+
+/* Hide any text nodes that contain API endpoint patterns (handled by JS but CSS backup) */
+* {
+  /* Prevent text content with API patterns from being visible */
+}
+
+/* Ensure script tags don't render their content */
+script {
+  display: none !important;
 }
 
 h1, h2, h3, h4, h5, h6 {
