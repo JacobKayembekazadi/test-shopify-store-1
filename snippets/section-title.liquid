@@ -1,0 +1,28 @@
+{%- liquid
+  assign alignment = align | default: 'left'
+  assign alignment_class = 'section-title'
+  if alignment == 'center'
+    assign alignment_class = 'section-title section-title--center'
+  endif
+-%}
+
+<div class="{{ alignment_class }}">
+  {%- if eyebrow != blank -%}
+    <p class="section-title__eyebrow">
+      {{ eyebrow }}
+    </p>
+  {%- endif -%}
+
+  {%- if title != blank -%}
+    <h2 class="section-title__heading">
+      {{ title }}
+    </h2>
+  {%- endif -%}
+
+  {%- if description != blank -%}
+    <p class="section-title__description">
+      {{ description }}
+    </p>
+  {%- endif -%}
+</div>
+

@@ -1,0 +1,98 @@
+{%- liquid
+  assign product_obj = product | default: block.settings.product
+  assign show_badge = show_badge | default: true
+  assign show_rating = show_rating | default: true
+  assign badge_text = badge_text | default: block.settings.badge
+  assign goal_text = goal_text | default: block.settings.goal
+  assign rating_text = rating_text | default: block.settings.rating
+-%}
+
+{%- if product_obj != blank -%}
+  <div class="product-card">
+    <div class="product-card__image-wrapper">
+      <a href="{{ product_obj.url }}">
+        {%- if product_obj.featured_image -%}
+          <img
+            src="{{ product_obj.featured_image | image_url: width: 800 }}"
+            alt="{{ product_obj.featured_image.alt | escape }}"
+            class="product-card__image"
+            width="800"
+            height="800"
+            loading="lazy"
+          >
+        {%- else -%}
+          {{ 'product-1' | placeholder_svg_tag: 'product-card__image' }}
+        {%- endif -%}
+      </a>
+
+      {%- if product_obj.compare_at_price > product_obj.price -%}
+        {%- liquid
+          assign discount_amount = product_obj.compare_at_price | minus: product_obj.price
+          assign discount_percentage = discount_amount | times: 100.0 | divided_by: product_obj.compare_at_price | round
+        -%}
+        <span class="product-card__discount">
+          SAVE {{ discount_percentage }}%
+        </span>
+      {%- endif -%}
+
+      {%- if badge_text != blank and show_badge -%}
+        <span class="product-card__badge">
+          {{ badge_text }}
+        </span>
+      {%- endif -%}
+    </div>
+
+    <div class="product-card__content">
+      {%- if goal_text != blank -%}
+        <p class="product-card__goal">
+          {{ goal_text }}
+        </p>
+      {%- endif -%}
+
+      <h3 class="product-card__title">
+        <a href="{{ product_obj.url }}" class="product-card__title-link">
+          {{ product_obj.title }}
+        </a>
+      </h3>
+
+      <div class="product-card__price-wrapper">
+        <span class="product-card__price">
+          {{ product_obj.price | money }}
+        </span>
+        {%- if product_obj.compare_at_price > product_obj.price -%}
+          <span class="product-card__compare-price">
+            {{ product_obj.compare_at_price | money }}
+          </span>
+        {%- endif -%}
+      </div>
+
+      {%- if show_rating and rating_text != blank -%}
+        <div class="product-card__rating">
+          <svg class="product-card__rating-star" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+          </svg>
+          <span>{{ rating_text }} / 5.0</span>
+        </div>
+      {%- endif -%}
+
+      <form action="{{ routes.cart_add_url }}" method="post" enctype="multipart/form-data">
+        <input type="hidden" name="id" value="{{ product_obj.selected_or_first_available_variant.id }}">
+        <button type="submit" class="product-card__button" name="add">
+          Add to Cart
+        </button>
+      </form>
+    </div>
+  </div>
+{%- endif -%}
+
+<style>
+  .product-card__title-link {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .product-card__title-link:hover {
+    color: var(--color-text-primary);
+  }
+</style>
+

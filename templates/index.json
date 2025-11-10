@@ -1,0 +1,212 @@
+{
+  "sections": {
+    "header": {
+      "type": "header",
+      "settings": {
+        "menu": "main-menu",
+        "logo_height": 30
+      }
+    },
+    "hero": {
+      "type": "hero",
+      "blocks": {
+        "metric_1": {
+          "type": "metric",
+          "settings": {
+            "label": "Active Members",
+            "value": "18,420+"
+          }
+        },
+        "metric_2": {
+          "type": "metric",
+          "settings": {
+            "label": "Avg. Adherence",
+            "value": "85%"
+          }
+        },
+        "metric_3": {
+          "type": "metric",
+          "settings": {
+            "label": "5-Star Reviews",
+            "value": "2.3K"
+          }
+        }
+      },
+      "block_order": [
+        "metric_1",
+        "metric_2",
+        "metric_3"
+      ],
+      "settings": {
+        "eyebrow": "AI-Powered Training • Ecommerce",
+        "title": "Find your exact plan.",
+        "title_subtitle": "Sustain it with precision.",
+        "description": "DualForce Fit combines tailored programs, smart supplementation, and premium gear into one seamless store built around your real goals.",
+        "primary_button_text": "Shop Goal Packs",
+        "primary_button_link": "#goal-packs",
+        "secondary_button_text": "Take 60s Quiz",
+        "secondary_button_link": "#quiz",
+        "card_title": "Shred Program • Week 6",
+        "card_stat1": "+4.2kg strength",
+        "card_stat2": "-5.3kg fat",
+        "card_progress": 85,
+        "badge_text": "Personalized Stack Active"
+      }
+    },
+    "brand_strip": {
+      "type": "brand-strip",
+      "blocks": {
+        "brand_1": {
+          "type": "brand",
+          "settings": {
+            "text": "MEN'S HEALTH"
+          }
+        },
+        "brand_2": {
+          "type": "brand",
+          "settings": {
+            "text": "CROSSFIT INC."
+          }
+        },
+        "brand_3": {
+          "type": "brand",
+          "settings": {
+            "text": "EQUINOX"
+          }
+        },
+        "brand_4": {
+          "type": "brand",
+          "settings": {
+            "text": "WHOOP"
+          }
+        },
+        "brand_5": {
+          "type": "brand",
+          "settings": {
+            "text": "HYPEBEAST"
+          }
+        }
+      },
+      "block_order": [
+        "brand_1",
+        "brand_2",
+        "brand_3",
+        "brand_4",
+        "brand_5"
+      ]
+    },
+    "goal_packs": {
+      "type": "goal-packs",
+      "settings": {
+        "eyebrow": "Goal Packs",
+        "title": "Curated stacks for the way you actually train.",
+        "description": "Each pack combines programs, supplements, and tools that work together. No random upsells—just what you need for a specific outcome."
+      }
+    },
+    "programs": {
+      "type": "programs",
+      "settings": {
+        "eyebrow": "Programs",
+        "title": "World-class programming without the ego.",
+        "description": "Structured blocks for beginners to advanced. Integrated with your goal pack for a complete system."
+      }
+    },
+    "quiz_banner": {
+      "type": "quiz-banner",
+      "settings": {
+        "eyebrow": "Smart Stack Matching",
+        "title": "Confused by the noise? Let data decide.",
+        "description": "Answer 8 questions and we'll build your training plan and product stack for you—no guesswork, no cluttered cart, just science.",
+        "button_text": "Start 60s Quiz",
+        "button_link": "#quiz"
+      }
+    },
+    "testimonials": {
+      "type": "testimonials",
+      "blocks": {
+        "testimonial_1": {
+          "type": "testimonial",
+          "settings": {
+            "quote": "Down 7kg without feeling wrecked.",
+            "text": "Sarah matched to the Foundation Starter Pack + Beginner Rebuild and solved 5 years of yo-yo training."
+          }
+        },
+        "testimonial_2": {
+          "type": "testimonial",
+          "settings": {
+            "quote": "Stronger at 36 than at 26.",
+            "text": "Malik used Power Build with targeted recovery picks from our stack matching quiz."
+          }
+        },
+        "testimonial_3": {
+          "type": "testimonial",
+          "settings": {
+            "quote": "It feels curated, not chaotic.",
+            "text": "Jess runs a full-time schedule and gets her entire plan + products in one cart, updated each block."
+          }
+        }
+      },
+      "block_order": [
+        "testimonial_1",
+        "testimonial_2",
+        "testimonial_3"
+      ],
+      "settings": {
+        "eyebrow": "Results",
+        "title": "Proof over promises.",
+        "description": "Members stick, not quit: on average they complete 85% of their plans with realistic, sustainable progress."
+      }
+    },
+    "cta_section": {
+      "type": "cta-section",
+      "settings": {
+        "title": "Ready to build a system, not a phase?",
+        "description": "Start with a goal pack or take the quiz. Either way, you'll get a complete plan—training, intake, recovery, and the exact tools to sustain it.",
+        "primary_button_text": "Shop Goal Packs",
+        "primary_button_link": "#goal-packs",
+        "secondary_button_text": "Browse All Products",
+        "secondary_button_link": "#shop"
+      }
+    },
+    "footer": {
+      "type": "footer",
+      "blocks": {
+        "shop_links": {
+          "type": "link_list",
+          "settings": {
+            "heading": "Shop",
+            "menu": "footer"
+          }
+        },
+        "company_links": {
+          "type": "link_list",
+          "settings": {
+            "heading": "Company",
+            "menu": "footer"
+          }
+        }
+      },
+      "block_order": [
+        "shop_links",
+        "company_links"
+      ],
+      "settings": {
+        "tagline": "Train Smarter. Shop Better. Perform Longer.",
+        "show_policy_link": true,
+        "show_terms_link": true
+      }
+    }
+  },
+  "order": [
+    "header",
+    "hero",
+    "brand_strip",
+    "goal_packs",
+    "programs",
+    "quiz_banner",
+    "testimonials",
+    "cta_section",
+    "footer"
+  ]
+}
+

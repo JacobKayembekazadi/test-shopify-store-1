@@ -1,0 +1,158 @@
+<div class="cta-section section-spacing">
+  <div class="container">
+    <div class="cta-section__wrapper">
+      <div class="cta-section__content">
+        {%- if section.settings.title != blank -%}
+          <h3 class="cta-section__title">
+            {{ section.settings.title }}
+          </h3>
+        {%- endif -%}
+
+        {%- if section.settings.description != blank -%}
+          <p class="cta-section__description">
+            {{ section.settings.description }}
+          </p>
+        {%- endif -%}
+      </div>
+
+      <div class="cta-section__actions">
+        {%- if section.settings.primary_button_text != blank -%}
+          <a href="{{ section.settings.primary_button_link | default: '#goal-packs' }}" class="btn-primary">
+            {{ section.settings.primary_button_text }}
+          </a>
+        {%- endif -%}
+
+        {%- if section.settings.secondary_button_text != blank -%}
+          <a href="{{ section.settings.secondary_button_link | default: '#shop' }}" class="btn-secondary">
+            {{ section.settings.secondary_button_text }}
+          </a>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .cta-section {
+    padding-bottom: 6rem;
+  }
+
+  .cta-section__wrapper {
+    background-color: var(--color-bg-elevated);
+    border-radius: 2rem;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    box-shadow: 0 20px 60px rgba(18, 18, 23, 0.06);
+    border: 1px solid rgba(224, 215, 204, 0.5);
+  }
+
+  @media screen and (min-width: 750px) {
+    .cta-section__wrapper {
+      padding: 4rem;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+    }
+  }
+
+  .cta-section__content {
+    max-width: 32rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .cta-section__title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.875rem;
+    font-weight: 700;
+    color: var(--color-text-primary);
+    line-height: 1.2;
+  }
+
+  @media screen and (min-width: 750px) {
+    .cta-section__title {
+      font-size: 2.5rem;
+    }
+  }
+
+  .cta-section__description {
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+  }
+
+  .cta-section__actions {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  @media screen and (min-width: 640px) {
+    .cta-section__actions {
+      flex-direction: row;
+    }
+  }
+
+  .cta-section__actions .btn-primary,
+  .cta-section__actions .btn-secondary {
+    text-align: center;
+    min-width: 10rem;
+  }
+
+  .cta-section__actions .btn-primary:hover {
+    background-color: var(--color-text-primary);
+    color: var(--color-accent-lime);
+  }
+</style>
+
+{% schema %}
+{
+  "name": "CTA Section",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Ready to build a system, not a phase?"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description",
+      "default": "Start with a goal pack or take the quiz. Either way, you'll get a complete plan—training, intake, recovery, and the exact tools to sustain it."
+    },
+    {
+      "type": "text",
+      "id": "primary_button_text",
+      "label": "Primary button text",
+      "default": "Shop Goal Packs"
+    },
+    {
+      "type": "url",
+      "id": "primary_button_link",
+      "label": "Primary button link"
+    },
+    {
+      "type": "text",
+      "id": "secondary_button_text",
+      "label": "Secondary button text",
+      "default": "Browse All Products"
+    },
+    {
+      "type": "url",
+      "id": "secondary_button_link",
+      "label": "Secondary button link"
+    }
+  ],
+  "presets": [
+    {
+      "name": "CTA Section"
+    }
+  ]
+}
+{% endschema %}
+

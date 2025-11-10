@@ -1,0 +1,146 @@
+<div class="brand-strip">
+  <div class="container">
+    <div class="brand-strip__wrapper">
+      {%- for block in section.blocks -%}
+        {%- if block.type == 'brand' -%}
+          <div class="brand-strip__item" {{ block.shopify_attributes }}>
+            {%- if block.settings.image != blank -%}
+              <img
+                src="{{ block.settings.image | image_url: width: 200 }}"
+                alt="{{ block.settings.image.alt | escape }}"
+                class="brand-strip__image"
+                width="200"
+                height="60"
+                loading="lazy"
+              >
+            {%- elsif block.settings.text != blank -%}
+              <span class="brand-strip__text">{{ block.settings.text }}</span>
+            {%- endif -%}
+          </div>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+  </div>
+</div>
+
+<style>
+  .brand-strip {
+    border-top: 1px solid var(--color-border-soft);
+    border-bottom: 1px solid var(--color-border-soft);
+    padding: 1.5rem 0;
+    overflow: hidden;
+  }
+
+  .brand-strip__wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 3rem;
+    opacity: 0.5;
+    filter: grayscale(100%);
+    transition: all 0.5s ease;
+  }
+
+  .brand-strip:hover .brand-strip__wrapper {
+    opacity: 1;
+    filter: grayscale(0%);
+  }
+
+  @media screen and (min-width: 750px) {
+    .brand-strip__wrapper {
+      justify-content: space-between;
+      gap: 3rem;
+    }
+  }
+
+  .brand-strip__item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .brand-strip__image {
+    max-height: 2.5rem;
+    width: auto;
+    object-fit: contain;
+  }
+
+  .brand-strip__text {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 1.25rem;
+    letter-spacing: -0.02em;
+    color: var(--color-text-primary);
+  }
+
+  @media screen and (max-width: 749px) {
+    .brand-strip__item:nth-child(n+4) {
+      display: none;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Brand Strip",
+  "tag": "section",
+  "class": "section",
+  "blocks": [
+    {
+      "type": "brand",
+      "name": "Brand",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Brand logo"
+        },
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Brand text",
+          "default": "BRAND"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Brand Strip",
+      "blocks": [
+        {
+          "type": "brand",
+          "settings": {
+            "text": "MEN'S HEALTH"
+          }
+        },
+        {
+          "type": "brand",
+          "settings": {
+            "text": "CROSSFIT INC."
+          }
+        },
+        {
+          "type": "brand",
+          "settings": {
+            "text": "EQUINOX"
+          }
+        },
+        {
+          "type": "brand",
+          "settings": {
+            "text": "WHOOP"
+          }
+        },
+        {
+          "type": "brand",
+          "settings": {
+            "text": "HYPEBEAST"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
+

@@ -1,0 +1,167 @@
+<div class="testimonials section-spacing" id="results">
+  <div class="container">
+    <div class="testimonials__wrapper">
+      {% render 'section-title',
+        eyebrow: section.settings.eyebrow,
+        title: section.settings.title,
+        description: section.settings.description,
+        align: 'center'
+      %}
+
+      <div class="testimonials__grid grid grid--3-col">
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'testimonial' -%}
+            <div class="testimonial-card" {{ block.shopify_attributes }}>
+              <div class="testimonial-card__stars">
+                {%- for i in (1..5) -%}
+                  <svg class="testimonial-card__star" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                  </svg>
+                {%- endfor -%}
+              </div>
+
+              {%- if block.settings.quote != blank -%}
+                <p class="testimonial-card__quote">
+                  "{{ block.settings.quote }}"
+                </p>
+              {%- endif -%}
+
+              {%- if block.settings.text != blank -%}
+                <p class="testimonial-card__text">
+                  {{ block.settings.text }}
+                </p>
+              {%- endif -%}
+            </div>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .testimonials__wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 4rem;
+  }
+
+  .testimonial-card {
+    background-color: var(--color-bg-elevated);
+    border-radius: 1.5rem;
+    padding: 2rem;
+    box-shadow: 0 10px 30px rgba(18, 18, 23, 0.04);
+    border: 1px solid rgba(224, 215, 204, 0.3);
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    transition: transform 0.3s ease;
+  }
+
+  .testimonial-card:hover {
+    transform: translateY(-4px);
+  }
+
+  .testimonial-card__stars {
+    display: flex;
+    gap: 0.25rem;
+  }
+
+  .testimonial-card__star {
+    width: 1rem;
+    height: 1rem;
+    fill: var(--color-accent-lime);
+    color: var(--color-accent-lime);
+  }
+
+  .testimonial-card__quote {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--color-text-primary);
+    line-height: 1.3;
+  }
+
+  .testimonial-card__text {
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Testimonials",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow text",
+      "default": "Results"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Proof over promises."
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description",
+      "default": "Members stick, not quit: on average they complete 85% of their plans with realistic, sustainable progress."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "testimonial",
+      "name": "Testimonial",
+      "settings": [
+        {
+          "type": "text",
+          "id": "quote",
+          "label": "Quote",
+          "default": "Down 7kg without feeling wrecked."
+        },
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Text",
+          "default": "Sarah matched to the Foundation Starter Pack + Beginner Rebuild and solved 5 years of yo-yo training."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Testimonials",
+      "blocks": [
+        {
+          "type": "testimonial",
+          "settings": {
+            "quote": "Down 7kg without feeling wrecked.",
+            "text": "Sarah matched to the Foundation Starter Pack + Beginner Rebuild and solved 5 years of yo-yo training."
+          }
+        },
+        {
+          "type": "testimonial",
+          "settings": {
+            "quote": "Stronger at 36 than at 26.",
+            "text": "Malik used Power Build with targeted recovery picks from our stack matching quiz."
+          }
+        },
+        {
+          "type": "testimonial",
+          "settings": {
+            "quote": "It feels curated, not chaotic.",
+            "text": "Jess runs a full-time schedule and gets her entire plan + products in one cart, updated each block."
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
+

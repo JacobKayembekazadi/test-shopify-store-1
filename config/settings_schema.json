@@ -1,0 +1,172 @@
+[
+  {
+    "name": "theme_info",
+    "theme_name": "DualForce Fit",
+    "theme_version": "1.0.0",
+    "theme_author": "DualForce Fit",
+    "theme_documentation_url": "",
+    "theme_support_url": ""
+  },
+  {
+    "name": "Colors",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Color settings"
+      },
+      {
+        "type": "color",
+        "id": "color_background",
+        "label": "Background color",
+        "default": "#F5F3EE"
+      },
+      {
+        "type": "color",
+        "id": "color_foreground",
+        "label": "Foreground color",
+        "default": "#151A28"
+      }
+    ]
+  },
+  {
+    "name": "Typography",
+    "settings": [
+      {
+        "type": "font_picker",
+        "id": "type_body_font",
+        "label": "Body font",
+        "default": "assistant_n4"
+      },
+      {
+        "type": "font_picker",
+        "id": "type_header_font",
+        "label": "Header font",
+        "default": "space_grotesk_n7"
+      },
+      {
+        "type": "range",
+        "id": "body_scale",
+        "min": 100,
+        "max": 130,
+        "step": 5,
+        "unit": "%",
+        "label": "Body text scale",
+        "default": 100
+      },
+      {
+        "type": "range",
+        "id": "heading_scale",
+        "min": 100,
+        "max": 150,
+        "step": 5,
+        "unit": "%",
+        "label": "Heading scale",
+        "default": 100
+      }
+    ]
+  },
+  {
+    "name": "Layout",
+    "settings": [
+      {
+        "type": "range",
+        "id": "page_width",
+        "min": 1000,
+        "max": 1600,
+        "step": 100,
+        "default": 1200,
+        "unit": "px",
+        "label": "Page width"
+      }
+    ]
+  },
+  {
+    "name": "Logo",
+    "settings": [
+      {
+        "type": "image_picker",
+        "id": "logo",
+        "label": "Logo image"
+      },
+      {
+        "type": "range",
+        "id": "logo_width",
+        "min": 50,
+        "max": 250,
+        "step": 10,
+        "default": 100,
+        "unit": "px",
+        "label": "Logo width"
+      }
+    ]
+  },
+  {
+    "name": "Favicon",
+    "settings": [
+      {
+        "type": "image_picker",
+        "id": "favicon",
+        "label": "Favicon image"
+      }
+    ]
+  },
+  {
+    "name": "Social sharing",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "Social sharing image"
+      },
+      {
+        "type": "image_picker",
+        "id": "share_image",
+        "label": "Image",
+        "info": "Recommended size: 1200 x 630px"
+      }
+    ]
+  },
+  {
+    "name": "Cart",
+    "settings": [
+      {
+        "type": "select",
+        "id": "cart_type",
+        "options": [
+          {
+            "value": "drawer",
+            "label": "Drawer"
+          },
+          {
+            "value": "page",
+            "label": "Page"
+          },
+          {
+            "value": "notification",
+            "label": "Notification"
+          }
+        ],
+        "default": "notification",
+        "label": "Cart type"
+      },
+      {
+        "type": "color_scheme",
+        "id": "cart_notification_color_scheme",
+        "label": "Cart notification color scheme",
+        "default": "scheme-1"
+      }
+    ]
+  },
+  {
+    "name": "Predictive search",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "predictive_search_enabled",
+        "default": true,
+        "label": "Enable predictive search",
+        "info": "When enabled, shows search suggestions as you type. [Learn more](https://help.shopify.com/en/manual/online-store/themes/theme-structure/theme-features#predictive-search)"
+      }
+    ]
+  }
+]
+

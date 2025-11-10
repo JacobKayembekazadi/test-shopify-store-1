@@ -1,0 +1,19 @@
+{
+  "current": {
+    "color_background": "#F5F3EE",
+    "color_foreground": "#151A28",
+    "type_body_font": "inter_n4",
+    "type_header_font": "space_grotesk_n7",
+    "body_scale": 100,
+    "heading_scale": 100,
+    "page_width": 1200,
+    "logo": null,
+    "logo_width": 100,
+    "favicon": null,
+    "share_image": null,
+    "cart_type": "notification",
+    "cart_notification_color_scheme": "scheme-1",
+    "predictive_search_enabled": true
+  }
+}
+

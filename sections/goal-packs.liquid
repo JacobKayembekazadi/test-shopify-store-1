@@ -1,0 +1,107 @@
+<div class="goal-packs section-spacing" id="goal-packs">
+  <div class="container">
+    <div class="goal-packs__wrapper">
+      {% render 'section-title',
+        eyebrow: section.settings.eyebrow,
+        title: section.settings.title,
+        description: section.settings.description
+      %}
+
+      <div class="goal-packs__grid grid grid--3-col">
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'product' and block.settings.product != blank -%}
+            <div {{ block.shopify_attributes }}>
+              {% render 'product-card', 
+                product: block.settings.product, 
+                show_badge: true, 
+                show_rating: true,
+                badge_text: block.settings.badge,
+                goal_text: block.settings.goal,
+                rating_text: block.settings.rating
+              %}
+            </div>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .goal-packs__wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 4rem;
+  }
+
+  @media screen and (min-width: 750px) {
+    .goal-packs__wrapper {
+      gap: 4rem;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Goal Packs",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow text",
+      "default": "Goal Packs"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Curated stacks for the way you actually train."
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description",
+      "default": "Each pack combines programs, supplements, and tools that work together. No random upsells—just what you need for a specific outcome."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "product",
+      "name": "Product",
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Product"
+        },
+        {
+          "type": "text",
+          "id": "badge",
+          "label": "Badge text",
+          "default": "Best Seller"
+        },
+        {
+          "type": "text",
+          "id": "goal",
+          "label": "Goal text",
+          "default": "Fat Loss • Energy • Recovery"
+        },
+        {
+          "type": "text",
+          "id": "rating",
+          "label": "Rating",
+          "default": "4.9"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Goal Packs"
+    }
+  ]
+}
+{% endschema %}
+

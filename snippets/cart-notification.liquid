@@ -1,0 +1,31 @@
+{%- comment -%}
+  Cart notification snippet (placeholder)
+  This can be enhanced with actual cart notification functionality
+{%- endcomment -%}
+
+<div class="cart-notification-wrapper" aria-live="polite" aria-modal="true" aria-labelledby="cart-notification-title" tabindex="-1">
+  <div class="cart-notification focus-inset" tabindex="-1">
+    <div class="cart-notification__header">
+      <h2 id="cart-notification-title" class="cart-notification__heading">Item added</h2>
+      <button type="button" class="cart-notification__close" aria-label="Close">
+        <svg aria-hidden="true" focusable="false" role="presentation" viewBox="0 0 16 14" class="icon icon-close">
+          <path fill-rule="evenodd" clip-rule="evenodd" d="M15 0L1 14m14 0L1 0" stroke="currentColor" stroke-width="1" fill="none"></path>
+        </svg>
+      </button>
+    </div>
+    <div class="cart-notification-product"></div>
+    <div class="cart-notification__links">
+      <a href="{{ routes.cart_url }}" id="cart-notification-button" class="button button--secondary">View cart</a>
+      <form action="{{ routes.cart_url }}" method="post" id="cart">
+        <button class="button button--primary" name="checkout">Check out</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<style>
+  .cart-notification-wrapper {
+    display: none;
+  }
+</style>
+

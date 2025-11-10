@@ -1,0 +1,93 @@
+<div class="programs section-spacing" id="programs" style="background-color: var(--color-bg-section-soft); background-color: rgba(240, 230, 218, 0.3); border-top: 1px solid var(--color-border-soft); border-bottom: 1px solid var(--color-border-soft);">
+  <div class="container">
+    <div class="programs__wrapper">
+      {% render 'section-title',
+        eyebrow: section.settings.eyebrow,
+        title: section.settings.title,
+        description: section.settings.description
+      %}
+
+      <div class="programs__grid grid grid--2-col">
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'product' and block.settings.product != blank -%}
+            <div {{ block.shopify_attributes }}>
+              {% render 'product-card', 
+                product: block.settings.product, 
+                show_badge: false, 
+                show_rating: false,
+                goal_text: block.settings.goal
+              %}
+            </div>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .programs__wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 4rem;
+  }
+
+  @media screen and (min-width: 750px) {
+    .programs__wrapper {
+      gap: 4rem;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Programs",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow text",
+      "default": "Programs"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "World-class programming without the ego."
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description",
+      "default": "Structured blocks for beginners to advanced. Integrated with your goal pack for a complete system."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "product",
+      "name": "Product",
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Product"
+        },
+        {
+          "type": "text",
+          "id": "goal",
+          "label": "Goal text",
+          "default": "Low impact • Habit rebuild"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Programs"
+    }
+  ]
+}
+{% endschema %}
+

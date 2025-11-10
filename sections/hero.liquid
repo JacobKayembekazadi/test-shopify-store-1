@@ -1,0 +1,545 @@
+<div class="hero section-spacing">
+  <div class="container">
+    <div class="hero__grid">
+      <div class="hero__content">
+        {%- if section.settings.eyebrow != blank -%}
+          <div class="hero__eyebrow">
+            <span class="hero__eyebrow-dot"></span>
+            <span class="hero__eyebrow-text">{{ section.settings.eyebrow }}</span>
+          </div>
+        {%- endif -%}
+
+        <h1 class="hero__title">
+          {{ section.settings.title | default: 'Find your exact plan.' }}
+          {%- if section.settings.title_subtitle != blank -%}
+            <span class="hero__title-subtitle">
+              {{ section.settings.title_subtitle }}
+            </span>
+          {%- endif -%}
+        </h1>
+
+        {%- if section.settings.description != blank -%}
+          <p class="hero__description">
+            {{ section.settings.description }}
+          </p>
+        {%- endif -%}
+
+        <div class="hero__actions">
+          {%- if section.settings.primary_button_text != blank -%}
+            <a href="{{ section.settings.primary_button_link | default: '#goal-packs' }}" class="btn-primary hero__btn">
+              {{ section.settings.primary_button_text }}
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M5 3l6 5-6 5"/>
+              </svg>
+            </a>
+          {%- endif -%}
+
+          {%- if section.settings.secondary_button_text != blank -%}
+            <a href="{{ section.settings.secondary_button_link | default: '#quiz' }}" class="btn-secondary hero__btn">
+              {{ section.settings.secondary_button_text }}
+            </a>
+          {%- endif -%}
+        </div>
+
+        <div class="hero__metrics">
+          {%- for block in section.blocks -%}
+            {%- if block.type == 'metric' -%}
+              {% render 'metric', label: block.settings.label, value: block.settings.value %}
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+      </div>
+
+      <div class="hero__image-wrapper">
+        <div class="hero__image-container">
+          {%- if section.settings.image != blank -%}
+            <img
+              src="{{ section.settings.image | image_url: width: 1200 }}"
+              alt="{{ section.settings.image.alt | escape }}"
+              class="hero__image"
+              width="1200"
+              height="1200"
+              loading="eager"
+            >
+          {%- else -%}
+            <img
+              src="https://images.unsplash.com/photo-1594381898411-846e7d193883?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3"
+              alt="Athlete training"
+              class="hero__image"
+              width="1200"
+              height="1200"
+              loading="eager"
+            >
+          {%- endif -%}
+
+          <div class="hero__image-overlay">
+            <div class="hero__image-card">
+              <div class="hero__image-card-header">
+                <div>
+                  <p class="hero__image-card-title">{{ section.settings.card_title | default: 'Shred Program • Week 6' }}</p>
+                  <div class="hero__image-card-stats">
+                    <span>{{ section.settings.card_stat1 | default: '+4.2kg strength' }}</span>
+                    <span class="hero__image-card-dot"></span>
+                    <span>{{ section.settings.card_stat2 | default: '-5.3kg fat' }}</span>
+                  </div>
+                </div>
+                <div class="hero__image-card-icon">
+                  <div class="hero__image-card-spinner"></div>
+                </div>
+              </div>
+              <div class="hero__image-card-progress">
+                <div class="hero__image-card-progress-bar" style="width: {{ section.settings.card_progress | default: 85 }}%"></div>
+              </div>
+            </div>
+
+            <div class="hero__image-badge">
+              <span class="hero__image-badge-dot"></span>
+              {{ section.settings.badge_text | default: 'Personalized Stack Active' }}
+            </div>
+          </div>
+        </div>
+
+        <!-- Decorative blobs -->
+        <div class="hero__blob hero__blob--1"></div>
+        <div class="hero__blob hero__blob--2"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .hero {
+    padding-top: 3rem;
+    padding-bottom: 3rem;
+  }
+
+  @media screen and (min-width: 750px) {
+    .hero {
+      padding-top: 6rem;
+      padding-bottom: 6rem;
+    }
+  }
+
+  .hero__grid {
+    display: grid;
+    gap: 3rem;
+    align-items: center;
+  }
+
+  @media screen and (min-width: 990px) {
+    .hero__grid {
+      grid-template-columns: 1fr 1fr;
+      gap: 5rem;
+    }
+  }
+
+  .hero__content {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .hero__eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.375rem 0.75rem;
+    border-radius: 9999px;
+    background-color: rgba(224, 215, 204, 0.3);
+    border: 1px solid var(--color-border-soft);
+    width: fit-content;
+  }
+
+  .hero__eyebrow-dot {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+    background-color: var(--color-accent-lime);
+    animation: pulse 2s infinite;
+  }
+
+  .hero__eyebrow-text {
+    font-size: 0.625rem;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: var(--color-text-primary);
+    font-weight: 700;
+  }
+
+  .hero__title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 3rem;
+    font-weight: 700;
+    line-height: 0.95;
+    letter-spacing: -0.02em;
+    color: var(--color-text-primary);
+  }
+
+  @media screen and (min-width: 750px) {
+    .hero__title {
+      font-size: 4.5rem;
+    }
+  }
+
+  .hero__title-subtitle {
+    display: block;
+    margin-top: 0.5rem;
+    color: var(--color-text-secondary);
+  }
+
+  .hero__title-subtitle span {
+    background: linear-gradient(to right, var(--color-accent-lime), var(--color-accent-sand));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero__description {
+    font-size: 1rem;
+    color: var(--color-text-secondary);
+    max-width: 28rem;
+    line-height: 1.6;
+  }
+
+  @media screen and (min-width: 750px) {
+    .hero__description {
+      font-size: 1.125rem;
+    }
+  }
+
+  .hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .hero__btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .hero__metrics {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--color-border-soft);
+  }
+
+  .hero__image-wrapper {
+    position: relative;
+    min-height: 24rem;
+  }
+
+  @media screen and (min-width: 990px) {
+    .hero__image-wrapper {
+      min-height: 37.5rem;
+    }
+  }
+
+  .hero__image-container {
+    position: relative;
+    background-color: var(--color-bg-section-dark);
+    border-radius: 2rem;
+    padding: 0.75rem;
+    box-shadow: 0 30px 90px rgba(0, 0, 0, 0.4);
+    height: 100%;
+    transform: rotate(1deg);
+    transition: transform 0.7s ease;
+    overflow: hidden;
+  }
+
+  .hero__image-container:hover {
+    transform: rotate(0deg);
+  }
+
+  .hero__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 1.5rem;
+    opacity: 0.9;
+  }
+
+  .hero__image-overlay {
+    position: absolute;
+    inset: 0.75rem;
+    border-radius: 1.5rem;
+    background: linear-gradient(to top, rgba(6, 8, 20, 0.6), transparent);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 1.5rem;
+  }
+
+  .hero__image-card {
+    background-color: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 1.5rem;
+    padding: 1.25rem;
+    color: white;
+    margin-top: auto;
+  }
+
+  .hero__image-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 0.5rem;
+  }
+
+  .hero__image-card-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 1.125rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .hero__image-card-stats {
+    display: flex;
+    gap: 0.75rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  .hero__image-card-dot {
+    width: 0.25rem;
+    height: 0.25rem;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.3);
+    align-self: center;
+  }
+
+  .hero__image-card-icon {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    background-color: var(--color-accent-lime);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .hero__image-card-spinner {
+    width: 1.25rem;
+    height: 1.25rem;
+    border: 2px solid var(--color-text-primary);
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+
+  .hero__image-card-progress {
+    width: 100%;
+    height: 0.375rem;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 9999px;
+    overflow: hidden;
+  }
+
+  .hero__image-card-progress-bar {
+    height: 100%;
+    background-color: var(--color-accent-lime);
+    transition: width 0.3s ease;
+  }
+
+  .hero__image-badge {
+    position: absolute;
+    top: 1.5rem;
+    right: 1.5rem;
+    background-color: var(--color-accent-lime);
+    color: var(--color-text-primary);
+    font-size: 0.625rem;
+    font-weight: 700;
+    padding: 0.5rem 1rem;
+    border-radius: 9999px;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  }
+
+  .hero__image-badge-dot {
+    width: 0.375rem;
+    height: 0.375rem;
+    background-color: var(--color-text-primary);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+
+  .hero__blob {
+    position: absolute;
+    width: 16rem;
+    height: 16rem;
+    border-radius: 50%;
+    mix-blend-mode: multiply;
+    filter: blur(80px);
+    opacity: 0.3;
+    z-index: -1;
+  }
+
+  .hero__blob--1 {
+    background-color: var(--color-accent-sand);
+    top: -2.5rem;
+    right: -2.5rem;
+    animation: blob 7s infinite;
+  }
+
+  .hero__blob--2 {
+    background-color: var(--color-accent-lime);
+    bottom: -5rem;
+    left: -2.5rem;
+    animation: blob 7s infinite 2s;
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Hero",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow text",
+      "default": "AI-Powered Training • Ecommerce"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Find your exact plan."
+    },
+    {
+      "type": "text",
+      "id": "title_subtitle",
+      "label": "Title subtitle",
+      "default": "Sustain it with precision."
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description",
+      "default": "DualForce Fit combines tailored programs, smart supplementation, and premium gear into one seamless store built around your real goals."
+    },
+    {
+      "type": "text",
+      "id": "primary_button_text",
+      "label": "Primary button text",
+      "default": "Shop Goal Packs"
+    },
+    {
+      "type": "url",
+      "id": "primary_button_link",
+      "label": "Primary button link"
+    },
+    {
+      "type": "text",
+      "id": "secondary_button_text",
+      "label": "Secondary button text",
+      "default": "Take 60s Quiz"
+    },
+    {
+      "type": "url",
+      "id": "secondary_button_link",
+      "label": "Secondary button link"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Hero image"
+    },
+    {
+      "type": "text",
+      "id": "card_title",
+      "label": "Card title",
+      "default": "Shred Program • Week 6"
+    },
+    {
+      "type": "text",
+      "id": "card_stat1",
+      "label": "Card stat 1",
+      "default": "+4.2kg strength"
+    },
+    {
+      "type": "text",
+      "id": "card_stat2",
+      "label": "Card stat 2",
+      "default": "-5.3kg fat"
+    },
+    {
+      "type": "range",
+      "id": "card_progress",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "label": "Card progress",
+      "default": 85
+    },
+    {
+      "type": "text",
+      "id": "badge_text",
+      "label": "Badge text",
+      "default": "Personalized Stack Active"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "metric",
+      "name": "Metric",
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "Active Members"
+        },
+        {
+          "type": "text",
+          "id": "value",
+          "label": "Value",
+          "default": "18,420+"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Hero",
+      "blocks": [
+        {
+          "type": "metric",
+          "settings": {
+            "label": "Active Members",
+            "value": "18,420+"
+          }
+        },
+        {
+          "type": "metric",
+          "settings": {
+            "label": "Avg. Adherence",
+            "value": "85%"
+          }
+        },
+        {
+          "type": "metric",
+          "settings": {
+            "label": "5-Star Reviews",
+            "value": "2.3K"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
+
