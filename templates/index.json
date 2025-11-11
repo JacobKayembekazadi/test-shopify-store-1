@@ -40,12 +40,20 @@
             "label": "5-Star Reviews",
             "value": "2.3K"
           }
+        },
+        "metric_XDmTrf": {
+          "type": "metric",
+          "settings": {
+            "label": "Active Members",
+            "value": "18,420+"
+          }
         }
       },
       "block_order": [
         "metric_1",
         "metric_2",
-        "metric_3"
+        "metric_3",
+        "metric_XDmTrf"
       ],
       "settings": {
         "eyebrow": "AI-Powered Training • Ecommerce",
@@ -84,6 +92,12 @@
             "text": "EQUINOX"
           }
         },
+        "brand_i3yKN7": {
+          "type": "brand",
+          "settings": {
+            "text": "BRAND"
+          }
+        },
         "brand_4": {
           "type": "brand",
           "settings": {
@@ -95,14 +109,23 @@
           "settings": {
             "text": "HYPEBEAST"
           }
+        },
+        "brand_z9Fi4t": {
+          "type": "brand",
+          "settings": {
+            "image": "shopify://shop_images/Untitled_design_7.jpg",
+            "text": "SLOE"
+          }
         }
       },
       "block_order": [
         "brand_1",
         "brand_2",
         "brand_3",
+        "brand_i3yKN7",
         "brand_4",
-        "brand_5"
+        "brand_5",
+        "brand_z9Fi4t"
       ],
       "settings": {}
     },
@@ -117,10 +140,30 @@
             "goal": "Fat Loss • Energy • Recovery",
             "rating": "4.9"
           }
+        },
+        "product_Qy47dp": {
+          "type": "product",
+          "settings": {
+            "product": "creatine-monohydrate-5",
+            "badge": "Best Seller",
+            "goal": "Fat Loss • Energy • Recovery",
+            "rating": "4.9"
+          }
+        },
+        "product_da9RKk": {
+          "type": "product",
+          "settings": {
+            "product": "nitric-shock-pre-workout-powder-fruit-punch",
+            "badge": "Best Seller",
+            "goal": "Fat Loss • Energy • Recovery",
+            "rating": "4.9"
+          }
         }
       },
       "block_order": [
-        "product_3q6n9L"
+        "product_3q6n9L",
+        "product_Qy47dp",
+        "product_da9RKk"
       ],
       "settings": {
         "eyebrow": "Goal Packs",
@@ -137,10 +180,34 @@
             "product": "nitric-shock-pre-workout-powder-fruit-punch",
             "goal": "Low impact • Habit rebuild"
           }
+        },
+        "product_rNqthQ": {
+          "type": "product",
+          "settings": {
+            "product": "creatine-monohydrate-5",
+            "goal": "Low impact • Habit rebuild"
+          }
+        },
+        "product_fyGa6C": {
+          "type": "product",
+          "settings": {
+            "product": "creatine-monohydrate",
+            "goal": "Low impact • Habit rebuild"
+          }
+        },
+        "product_HH6xwj": {
+          "type": "product",
+          "settings": {
+            "product": "nitric-shock-pre-workout-powder-fruit-punch",
+            "goal": "Low impact • Habit rebuild"
+          }
         }
       },
       "block_order": [
-        "product_f4dmhD"
+        "product_f4dmhD",
+        "product_rNqthQ",
+        "product_fyGa6C",
+        "product_HH6xwj"
       ],
       "settings": {
         "eyebrow": "Programs",
